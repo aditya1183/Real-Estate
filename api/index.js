@@ -8,12 +8,13 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import {cloudinaryConnect} from "./config/cloudinary.js";
 
+
 dotenv.config();
 
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
-    console.log("Connected to MongoDB!");
+    console.log("Connected to MongoDB! aditya");
   })
   .catch((err) => {
     console.log(err);
