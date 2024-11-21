@@ -1,5 +1,3 @@
-
-
 import { useSelector } from "react-redux";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -24,6 +22,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
   const [userListings, setUserListings] = useState([]);
+  const [showListingsError, setShowListingsError] = useState(false);
 
   const handleFileUpload = async (file) => {
     const formData = new FormData();
@@ -223,6 +222,13 @@ export default function Profile() {
       <p className="text-red-700 mt-5">{error ? error : ""}</p>
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is updated successfully!" : ""}
+      </p>
+
+      <button onClick={handleShowListings} className="text-green-700 w-full">
+        Show Listings
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingsError ? "Error showing listings" : ""}
       </p>
       {userListings && userListings.length > 0 && (
         <div className="flex flex-col gap-4">
