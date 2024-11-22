@@ -33,7 +33,6 @@ export default function CreateListing() {
       const res = await fetch(`/api/listing/get/${listingId}`);
       const data = await res.json();
       if (data.success === false) {
-        console.log(data.message);
         return;
       }
       setFormData(data);
@@ -140,7 +139,7 @@ export default function CreateListing() {
       );
 
       const data = await res.data;
-      console.log("data send ", data);
+
       setLoading(false);
       if (data.success === false) {
         setError(data.message);

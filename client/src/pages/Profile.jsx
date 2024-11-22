@@ -137,6 +137,7 @@ export default function Profile() {
         method: "DELETE",
       });
       const data = await res.json();
+      console.log(data);
       if (data.success === false) {
         console.log(data.message);
         return;
@@ -150,6 +151,28 @@ export default function Profile() {
     }
   };
 
+  // model code here
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalAction, setModalAction] = useState(null); // Tracks which action is being performed
+
+  const openModal = (action) => {
+    setModalAction(action); // Set action type (deleteAccount or signOut)
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalAction(null);
+  };
+
+  const handleConfirm = () => {
+    if (modalAction === "deleteAccount") {
+      handleDeleteUser();
+    } else if (modalAction === "signOut") {
+      handleSignOut();
+    }
+    closeModal();
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -208,7 +231,7 @@ export default function Profile() {
           Create Listing
         </Link>
       </form>
-      <div className="flex justify-between mt-5">
+      {/* <div className="flex justify-between mt-5">
         <span
           onClick={handleDeleteUser}
           className="text-red-700 cursor-pointer"
@@ -216,6 +239,20 @@ export default function Profile() {
           Delete account
         </span>
         <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+          Sign out
+        </span>
+      </div> */}
+      <div className="flex justify-between mt-5">
+        <span
+          onClick={() => openModal("deleteAccount")}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete account
+        </span>
+        <span
+          onClick={() => openModal("signOut")}
+          className="text-red-700 cursor-pointer"
+        >
           Sign out
         </span>
       </div>
@@ -267,6 +304,42 @@ export default function Profile() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* // model code here  */}
+
+      <p className="text-red-700 mt-5">{error ? error : ""}</p>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-md p-6 text-center">
+            <h2 className="text-xl font-semibold mb-4">
+              {modalAction === "deleteAccount"
+                ? "Confirm Account Deletion"
+                : "Confirm Sign Out"}
+            </h2>
+            <p className="text-gray-600 mb-6">
+              {modalAction === "deleteAccount"
+                ? "Are you sure you want to delete your account? This action cannot be undone."
+                : "Are you sure you want to sign out?"}
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleConfirm}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={closeModal}
+                className="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
