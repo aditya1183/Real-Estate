@@ -12,6 +12,7 @@ import {
 } from "../redux/user/userSlice";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -23,6 +24,7 @@ export default function Profile() {
   const dispatch = useDispatch();
   const [userListings, setUserListings] = useState([]);
   const [showListingsError, setShowListingsError] = useState(false);
+  const navigate = useNavigate();
 
   const handleFileUpload = async (file) => {
     const formData = new FormData();
@@ -167,7 +169,8 @@ export default function Profile() {
 
   const handleConfirm = () => {
     if (modalAction === "deleteAccount") {
-      handleDeleteUser();
+      // handleDeleteUser();
+      return navigate(`/veriftpasswordtodeleteaccount/${currentUser._id}`);
     } else if (modalAction === "signOut") {
       handleSignOut();
     }
