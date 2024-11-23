@@ -15,7 +15,7 @@ export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
     return next(errorHandler(401, "You can only update your own account!"));
   }
-  console.log(req.body);
+
   try {
     // Upload avatar to Cloudinary if provided
     if (req.file) {
@@ -44,7 +44,7 @@ export const updateUser = async (req, res, next) => {
     );
 
     const user = await User.findById(req.params.id);
-    console.log(user);
+
     const { password, ...rest } = updatedUser._doc;
     await sendEmail({
       to: updatedUser.email,
@@ -75,8 +75,6 @@ export const updateUser = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
   try {
     // Log the request body and user object
-    console.log("Request Body:", req.body);
-    console.log("Request User:", req.params.id);
 
     const { password } = req.body;
 
@@ -94,7 +92,7 @@ export const deleteUser = async (req, res, next) => {
     console.log("Found User:", finduser);
 
     // // Check if the user is authorized
-    console.log(finduser._id.toString());
+
     if (req.params.id !== finduser._id.toString()) {
       return next(errorHandler(401, "You can only delete your own account!"));
     }

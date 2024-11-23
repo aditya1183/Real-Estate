@@ -37,7 +37,7 @@ export const signin = async (req, res, next) => {
     if (!validUser) return next(errorHandler(404, "User not found!"));
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(401, "Wrong credentials!"));
-    console.log("aditya");
+   
     const accessToken = generateAccessToken(validUser);
     const refreshToken = generateRefreshToken(validUser);
 
@@ -98,7 +98,6 @@ export const google = async (req, res, next) => {
 
 export const signOut = async (req, res, next) => {
   try {
-    console.log("aditya");
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
     res.status(200).json("User has been logged out!");

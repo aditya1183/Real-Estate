@@ -1,9 +1,30 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  signOutUserFailure,
+  signOutUserSuccess,
+  signOutUserStart,
+} from "../redux/user/userSlice";
 
 const ProtectedApp = ({ children }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(data.message));
+    }
+  };
 
   useEffect(() => {
     const checkAccessToken = async () => {
@@ -12,6 +33,7 @@ const ProtectedApp = ({ children }) => {
         console.log("Access Token Valid:", res.data);
       } catch (error) {
         if (error.response && error.response.status === 404) {
+          await handleSignOut();
           console.log(
             "Access token expired or not found. Redirecting to login."
           );

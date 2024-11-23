@@ -15,18 +15,34 @@ import ForgottenPassword from "./pages/ForgottenPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 import Protuctedroute from "./components/Protuctedroute";
-
+import AllUsers from "./Admin/AllUsers";
+import SingleUserInfo from "./Admin/singleUserInfo";
+import GetAllListings from "./Admin/GetAllListings";
 export default function App() {
   return (
-    <Protuctedroute>
+    <BrowserRouter>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/about" element={<About />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/listing/:listingId" element={<Listing />} />
+        <Route
+          path="/search"
+          element={
+            <Protuctedroute>
+              <Search />
+            </Protuctedroute>
+          }
+        />
+        <Route
+          path="/listing/:listingId"
+          element={
+            <Protuctedroute>
+              <Listing />
+            </Protuctedroute>
+          }
+        />
 
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
@@ -42,7 +58,10 @@ export default function App() {
         />
         <Route path="/forgottenpassword" element={<ForgottenPassword />} />
         <Route path="/resetpassword/" element={<ResetPassword />} />
+        <Route path="/getalluser/" element={<AllUsers />} />
+        <Route path="/singleuserInfo/:userId" element={<SingleUserInfo />} />
+        <Route path="/getalllistings" element={<GetAllListings />} />
       </Routes>
-    </Protuctedroute>
+    </BrowserRouter>
   );
 }
