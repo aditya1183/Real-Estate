@@ -2,6 +2,8 @@ import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import Listing from "../models/listing.model.js";
+import { sendEmail } from "../utils/sendEmail.js";
+import { passwordUpdated } from "../mailtemplates/passwordUpdate.js";
 
 export const test = (req, res) => {
   res.json({
@@ -41,8 +43,14 @@ export const updateUser = async (req, res, next) => {
       { new: true }
     );
 
+    const user = await User.findById(req.params.id);
+    console.log(user);
     const { password, ...rest } = updatedUser._doc;
-
+    await sendEmail({
+      to: updatedUser.email,
+      subject: "Account Updated Successfully",
+      html: passwordUpdated(user.email, user.username),
+    });
     res.status(200).json(rest);
   } catch (error) {
     next(error);
@@ -99,6 +107,11 @@ export const deleteUser = async (req, res, next) => {
 
     // // Delete the user
     await User.findByIdAndDelete(req.params.id);
+    await sendEmail({
+      to: user.email,
+      subject: "Account Deleted",
+      text: `Hello ${user.username},\n\nYour account has been successfully deleted. We hope to see you again!`,
+    });
     res.clearCookie("access_token");
     res.status(200).json({ success: true, message: "User has been deleted!" });
   } catch (error) {

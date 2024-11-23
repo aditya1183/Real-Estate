@@ -11,10 +11,14 @@ import UpdateListing from "./pages/UpdateListing";
 import Listing from "./pages/Listing";
 import Search from "./pages/Search";
 import VerifyPasswordtoDeleteAccount from "./pages/VerifyPasswordtoDeleteAccount";
+import ForgottenPassword from "./pages/ForgottenPassword";
+import ResetPassword from "./pages/ResetPassword";
+
+import Protuctedroute from "./components/Protuctedroute";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Protuctedroute>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -36,7 +40,9 @@ export default function App() {
           path="/veriftpasswordtodeleteaccount/:id"
           element={<VerifyPasswordtoDeleteAccount />}
         />
+        <Route path="/forgottenpassword" element={<ForgottenPassword />} />
+        <Route path="/resetpassword/" element={<ResetPassword />} />
       </Routes>
-    </BrowserRouter>
+    </Protuctedroute>
   );
 }
