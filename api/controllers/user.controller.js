@@ -4,6 +4,7 @@ import { errorHandler } from "../utils/error.js";
 import Listing from "../models/listing.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { passwordUpdated } from "../mailtemplates/passwordUpdate.js";
+import DeleteUser from "../models/Deleteuser.model.js";
 
 export const test = (req, res) => {
   res.json({
@@ -56,43 +57,71 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
-// export const deleteUser = async (req, res, next) => {
-//   console.log(req.body);
-//   if (req.user.id !== req.params.id)
-//     return next(errorHandler(401, "You can only delete your own account!"));
 
-//   const { password } = req.body;
-//   console.log(password);
+// export const deleteUser = async (req, res, next) => {
 //   try {
+//     // Log the request body and user object
+
+//     const { password } = req.body;
+
+//     if (!password) {
+//       return next(errorHandler(400, "Password is required to delete account"));
+//     }
+
+//     // // Fetch the user using their ID
+//     const finduser = await User.findById(req.params.id);
+
+//     if (!finduser) {
+//       console.log("User not found for ID:", req.params.id);
+//       return next(errorHandler(404, "User not found"));
+//     }
+//     console.log("Found User:", finduser);
+
+//     // // Check if the user is authorized
+
+//     if (req.params.id !== finduser._id.toString()) {
+//       return next(errorHandler(401, "You can only delete your own account!"));
+//     }
+
+//     // Validate the provided password
+//     const validPassword = bcryptjs.compareSync(password, finduser.password);
+//     if (!validPassword) {
+//       return next(errorHandler(401, "Invalid password"));
+//     }
+
+//     // // Delete the user
 //     await User.findByIdAndDelete(req.params.id);
+//     await sendEmail({
+//       to: User.email,
+//       subject: "Account Deleted",
+//       text: `Hello ${user.username},\n\nYour account has been successfully deleted. We hope to see you again!`,
+//     });
 //     res.clearCookie("access_token");
-//     res.status(200).json("User has been deleted!");
+//     res.status(200).json({ success: true, message: "User has been deleted!" });
 //   } catch (error) {
+//     console.log("Error during user deletion:", error);
 //     next(error);
 //   }
 // };
 
+
+
 export const deleteUser = async (req, res, next) => {
   try {
-    // Log the request body and user object
-
     const { password } = req.body;
 
     if (!password) {
-      return next(errorHandler(400, "Password is required to delete account"));
+      return next(errorHandler(400, "Password is required to delete the account"));
     }
 
-    // // Fetch the user using their ID
+    // Fetch the user using their ID
     const finduser = await User.findById(req.params.id);
 
     if (!finduser) {
-      console.log("User not found for ID:", req.params.id);
       return next(errorHandler(404, "User not found"));
     }
-    console.log("Found User:", finduser);
 
-    // // Check if the user is authorized
-
+    // Check if the user is authorized
     if (req.params.id !== finduser._id.toString()) {
       return next(errorHandler(401, "You can only delete your own account!"));
     }
@@ -103,20 +132,34 @@ export const deleteUser = async (req, res, next) => {
       return next(errorHandler(401, "Invalid password"));
     }
 
-    // // Delete the user
-    await User.findByIdAndDelete(req.params.id);
-    await sendEmail({
-      to: user.email,
-      subject: "Account Deleted",
-      text: `Hello ${user.username},\n\nYour account has been successfully deleted. We hope to see you again!`,
+    // Move user data to DeletedUser model
+    const deletedUserData = new DeleteUser({
+      username: finduser.username,
+      email: finduser.email,
+      avatar: finduser.avatar,
+      deletionDate: new Date(), // Adding deletion timestamp
     });
+    await deletedUserData.save();
+
+    // Delete the user from User collection
+    await User.findByIdAndDelete(req.params.id);
+
+    // Send email notification
+    await sendEmail({
+      to: finduser.email,
+      subject: "Account Deleted",
+      html: `Hello ${finduser.username},\n\nYour account has been successfully deleted. We hope to see you again!`,
+    });
+
+    // Clear cookies and send response
     res.clearCookie("access_token");
-    res.status(200).json({ success: true, message: "User has been deleted!" });
+    res.status(200).json({ success: true, message: "User has been deleted and archived!" });
   } catch (error) {
-    console.log("Error during user deletion:", error);
+    console.error("Error during user deletion:", error);
     next(error);
   }
 };
+
 
 export const getUserListings = async (req, res, next) => {
   if (req.user.id === req.params.id) {

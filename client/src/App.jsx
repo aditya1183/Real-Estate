@@ -17,7 +17,10 @@ import ResetPassword from "./pages/ResetPassword";
 import Protuctedroute from "./components/Protuctedroute";
 import AllUsers from "./Admin/AllUsers";
 import SingleUserInfo from "./Admin/singleUserInfo";
+import Admin from "./Admin/Admin";
 import GetAllListings from "./Admin/GetAllListings";
+import AdditionalDetails from "./pages/AdditionalDetails";
+import Getalldeletedusers from "./Admin/Getalldeletedusers";
 export default function App() {
   return (
     <BrowserRouter>
@@ -44,6 +47,9 @@ export default function App() {
           }
         />
 
+        {/* <Route path="/profile" element={<Profile />} />
+        <Route path="/create-listing" element={<CreateListing />} />
+        <Route path="/update-listing/:listingId" element={<UpdateListing />} /> */}
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing />} />
@@ -52,6 +58,7 @@ export default function App() {
             element={<UpdateListing />}
           />
         </Route>
+
         <Route
           path="/veriftpasswordtodeleteaccount/:id"
           element={<VerifyPasswordtoDeleteAccount />}
@@ -61,6 +68,9 @@ export default function App() {
         <Route path="/getalluser/" element={<AllUsers />} />
         <Route path="/singleuserInfo/:userId" element={<SingleUserInfo />} />
         <Route path="/getalllistings" element={<GetAllListings />} />
+        <Route path="/additionaldetails" element={<AdditionalDetails />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/alldeletedusers" element={<Getalldeletedusers />} />
       </Routes>
     </BrowserRouter>
   );

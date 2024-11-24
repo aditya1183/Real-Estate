@@ -166,17 +166,17 @@ export default function Profile() {
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <Link
-        to="/getalluser"
+        to="/admin"
         className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80 gap-2"
       >
         <button>Admin</button>
       </Link>
 
       <Link
-        to="/getalllistings"
+        to="/additionaldetails"
         className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80"
       >
-        <button>All Listings</button>
+        <button>Additionals details</button>
       </Link>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
