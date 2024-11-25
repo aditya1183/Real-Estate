@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
   signOutUserFailure,
   signOutUserSuccess,
@@ -9,6 +10,8 @@ import {
 } from "../redux/user/userSlice";
 
 const ProtectedApp = ({ children }) => {
+  const aditya = useLocation();
+  console.log(aditya);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSignOut = async () => {
@@ -37,7 +40,7 @@ const ProtectedApp = ({ children }) => {
           console.log(
             "Access token expired or not found. Redirecting to login."
           );
-          navigate("/sign-in"); // Ensure route is correct
+          navigate("/sign-in", { state: { from: window.location.pathname } }); // Ensure route is correct
         } else {
           console.error("An unexpected error occurred:", error);
         }
