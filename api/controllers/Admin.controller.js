@@ -55,3 +55,34 @@ export const getalllistings = async (req, res, next) => {
     next(errorHandler(500, "An error occurred while fetching users"));
   }
 };
+
+// export const deletelisting = async (req, res, next) => {
+//   try {
+//     const id = req.listings._id;
+//     console.log(id);
+//     res.json("Aditya vashistha is good boy ");
+//   } catch (error) {}
+// };
+// Adjust the path to your model file
+
+export const deletelisting = async (req, res, next) => {
+  try {
+    // const id = req.params.id; // Assuming the ID is passed as a route parameter
+    // console.log("Deleting listing with ID:", id);
+    const { listingId } = req.body;
+    console.log(listingId);
+    // Check if the listing exists
+    const listing = await Listing.findById(listingId);
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    // Delete the listing
+    await Listing.findByIdAndDelete(listingId);
+
+    res.status(200).json({ message: "Listing deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting listing:", error);
+    res.status(500).json({ message: "Server error while deleting listing" });
+  }
+};

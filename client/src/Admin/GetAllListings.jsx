@@ -34,7 +34,7 @@ export default function AllListings() {
           setLoading(false);
           return;
         }
-        console.log(data);
+
         setListings(data);
         setLoading(false);
         setError(false);
@@ -47,17 +47,25 @@ export default function AllListings() {
   }, []);
 
   const handleDelete = async (listingId) => {
+    console.log("listing is is ", listingId);
     try {
-      const res = await fetch(`/api/admin/delete/${listingId}`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
+      const res = await axios.post(
+        `/api/admin/delete/${listingId}`,
+        { listingId },
+        {
+          Headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await res.data;
+      console.log(data);
       if (data.success) {
         setListings((prev) =>
           prev.filter((listing) => listing._id !== listingId)
         );
       } else {
-        alert("Failed to delete the listing.");
+        //alert("Failed to delete the listing.");
       }
     } catch (err) {
       console.error("Error deleting listing:", err);
