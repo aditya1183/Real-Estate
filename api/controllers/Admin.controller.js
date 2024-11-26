@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import Listing from "../models/listing.model.js";
 import DeleteUsers from "../models/Deleteuser.model.js";
+import DeletedListing from "../models/DeletedListings.model.js";
 
 // Controller to fetch all users
 export const getAllUsers = async (req, res, next) => {
@@ -20,8 +21,7 @@ export const getAllUsers = async (req, res, next) => {
 export const getalldeleteuser = async (req, res, next) => {
   try {
     const users = await DeleteUsers.find({});
-    console.log("aditya delete user");
-    console.log(users);
+
     if (!users.length) {
       return res.status(404).json({ message: "No users found!" });
     }
@@ -56,33 +56,47 @@ export const getalllistings = async (req, res, next) => {
   }
 };
 
-// export const deletelisting = async (req, res, next) => {
-//   try {
-//     const id = req.listings._id;
-//     console.log(id);
-//     res.json("Aditya vashistha is good boy ");
-//   } catch (error) {}
-// };
-// Adjust the path to your model file
-
 export const deletelisting = async (req, res, next) => {
   try {
-    // const id = req.params.id; // Assuming the ID is passed as a route parameter
-    // console.log("Deleting listing with ID:", id);
     const { listingId } = req.body;
-    console.log(listingId);
+
     // Check if the listing exists
     const listing = await Listing.findById(listingId);
+    
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
     }
 
-    // Delete the listing
+    // Move the listing to the DeletedListing collection
+    const deletedListing = new DeletedListing({
+      deletedby: "Admin",
+      ...listing.toObject(), // Copy all properties from the original listing
+      deletedAt: new Date(), // Set the deletion time
+    });
+    await deletedListing.save();
+
+    // Delete the listing from the original collections
     await Listing.findByIdAndDelete(listingId);
 
-    res.status(200).json({ message: "Listing deleted successfully" });
+    res.status(200).json({
+      message: "Listing deleted successfully and moved to DeletedListing",
+    });
   } catch (error) {
     console.error("Error deleting listing:", error);
     res.status(500).json({ message: "Server error while deleting listing" });
+  }
+};
+
+export const getalldeletedlistings = async (req, res, next) => {
+  try {
+    const deletedlistings = await DeletedListing.find({});
+    if (!deletedlistings.length) {
+      return res.status(404).json({ message: "No deleted listings found!" });
+    }
+    res.status(200).json(deletedlistings);
+  } catch (error) {
+    next(
+      errorHandler(500, "An error occurred while fetching deleted listings")
+    );
   }
 };

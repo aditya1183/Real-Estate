@@ -21,6 +21,9 @@ export default function AllListings() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copiedListing, setCopiedListing] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [deleteListingId, setDeleteListingId] = useState(null);
+
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -47,30 +50,39 @@ export default function AllListings() {
   }, []);
 
   const handleDelete = async (listingId) => {
-    console.log("listing is is ", listingId);
     try {
       const res = await axios.post(
         `/api/admin/delete/${listingId}`,
         { listingId },
         {
-          Headers: {
+          headers: {
             "Content-Type": "application/json",
           },
         }
       );
       const data = await res.data;
       console.log(data);
-      if (data.success) {
+      setShowModal(false);
+      if (data.message === "Listing deleted successfully") {
         setListings((prev) =>
           prev.filter((listing) => listing._id !== listingId)
         );
       } else {
-        //alert("Failed to delete the listing.");
+        setError("Something Went Wrong");
       }
     } catch (err) {
       console.error("Error deleting listing:", err);
-      alert("An error occurred while deleting the listing.");
     }
+  };
+
+  const openModal = (id) => {
+    setDeleteListingId(id);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setDeleteListingId(null);
+    setShowModal(false);
   };
 
   return (
@@ -80,9 +92,10 @@ export default function AllListings() {
           All Listings
         </h1>
         {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
-        {error && (
-          <p className="text-center my-7 text-2xl">Something went wrong!</p>
-        )}
+        {error && <p className="text-center my-7 text-2xl">{error}</p>}
+        {/* {
+         {listing.length==0}
+        } */}
 
         {!loading && listings.length === 0 && (
           <p className="text-center my-7 text-2xl">No listings found.</p>
@@ -114,12 +127,6 @@ export default function AllListings() {
                     : listing.regularPrice.toLocaleString("en-US")}
                   {listing.type === "rent" && " / month"}
                 </p>
-                {/* <button
-                  className="bg-red-500 text-white p-2 rounded-lg"
-                  onClick={() => handleDelete(listing._id)}
-                >
-                  Delete
-                </button> */}
               </div>
               <p className="text-gray-600 text-sm flex items-center mt-2">
                 <FaMapMarkerAlt className="text-green-700 mr-2" />
@@ -172,7 +179,7 @@ export default function AllListings() {
                 </button>
                 <button
                   className="bg-red-500 text-white p-2 rounded-lg"
-                  onClick={() => handleDelete(listing._id)}
+                  onClick={() => openModal(listing._id)}
                 >
                   Delete
                 </button>
@@ -183,6 +190,41 @@ export default function AllListings() {
             </div>
           ))}
         </div>
+
+        {showModal && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            style={{ zIndex: 1050 }} // Optional inline style for absolute control
+          >
+            <div
+              className="bg-white p-8 rounded-lg shadow-2xl"
+              style={{
+                width: "90%",
+                maxWidth: "500px",
+                padding: "2rem",
+                zIndex: 1050,
+              }}
+            >
+              <h3 className="text-xl font-semibold mb-6 text-center">
+                Are you sure you want to delete this listing?
+              </h3>
+              <div className="flex justify-end gap-6">
+                <button
+                  className="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg text-lg"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-lg text-lg"
+                  onClick={() => handleDelete(deleteListingId)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );

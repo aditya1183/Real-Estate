@@ -1,6 +1,8 @@
 import { console } from "inspector";
 import Listing from "../models/listing.model.js";
 import { errorHandler } from "../utils/error.js";
+import DeletedListing from "../models/DeletedListings.model.js";
+import User from "../models/user.model.js";
 
 export const createListing = async (req, res, next) => {
   try {
@@ -25,20 +27,72 @@ export const createListing = async (req, res, next) => {
 //   }
 // };
 
+// export const deleteListing = async (req, res, next) => {
+//   const listing = await Listing.findById(req.params.id);
+
+//   if (!listing) {
+//     return next(errorHandler(404, "Listing not found!"));
+//   }
+
+//   if (req.user.id !== listing.userRef.toString()) {
+//     return next(errorHandler(401, "You can only delete your own listings!"));
+//   }
+
+//   try {
+//     await Listing.findByIdAndDelete(req.params.id);
+//     res.status(200).json("Listing has been deleted!");
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const deleteListing = async (req, res, next) => {
-  const listing = await Listing.findById(req.params.id);
-
-  if (!listing) {
-    return next(errorHandler(404, "Listing not found!"));
-  }
-
-  if (req.user.id !== listing.userRef.toString()) {
-    return next(errorHandler(401, "You can only delete your own listings!"));
-  }
-
   try {
+    // Find the listing by ID
+    const listing = await Listing.findById(req.params.id);
+    console.log("deleted listing ", listing);
+    if (!listing) {
+      return next(errorHandler(404, "Listing not found!"));
+    }
+
+    // Ensure the user has permission to delete the listing
+    if (req.user.id !== listing.userRef.toString()) {
+      return next(errorHandler(401, "You can only delete your own listings!"));
+    }
+
+    // Find the username of the user who is deleting the listing
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(errorHandler(404, "User not found!"));
+    }
+
+    // Add the listing to the DeletedListings database
+    const deletedListing = new DeletedListing({
+      name: listing.name,
+      description: listing.description,
+      address: listing.address,
+      regularPrice: listing.regularPrice,
+      discountPrice: listing.discountPrice,
+      bathrooms: listing.bathrooms,
+      bedrooms: listing.bedrooms,
+      furnished: listing.furnished,
+      parking: listing.parking,
+      type: listing.type,
+      offer: listing.offer,
+      imageUrls: listing.imageUrls,
+      deletedAt: new Date(),
+      deletedBy: user.username, // Add the username
+      userId: req.user.id, // Add the user ID
+    });
+
+    await deletedListing.save();
+
+    // Delete the listing from the active listings database
     await Listing.findByIdAndDelete(req.params.id);
-    res.status(200).json("Listing has been deleted!");
+
+    res
+      .status(200)
+      .json({ message: "Listing has been deleted and archived successfully!" });
   } catch (error) {
     next(error);
   }

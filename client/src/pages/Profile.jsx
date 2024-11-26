@@ -121,9 +121,17 @@ export default function Profile() {
 
   const handleListingDelete = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
-        method: "DELETE",
-      });
+      const res = await axios.post(
+        `/api/listing/delete/${listingId}`,
+        {
+          id: currentUser._id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
@@ -269,6 +277,7 @@ export default function Profile() {
       <p className="text-red-700 mt-5">
         {showListingsError ? "Error showing listings" : ""}
       </p>
+
       {userListings && userListings.length > 0 && (
         <div className="flex flex-col gap-4">
           <h1 className="text-center mt-7 text-2xl font-semibold">

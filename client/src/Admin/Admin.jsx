@@ -82,6 +82,7 @@ import AllUsers from "./AllUsers";
 import GetAllListings from "./GetAllListings";
 import DeletedUsers from "./Getalldeletedusers"; // Import the new component
 import { useEffect } from "react";
+import DeletedListing from "./DeletedListings";
 
 const Admin = () => {
   const [activeSection, setActiveSection] = useState("users");
@@ -122,6 +123,16 @@ const Admin = () => {
           >
             All Deleted Users
           </button>
+          <button
+            onClick={() => setActiveSection("deletedlistings")}
+            className={`w-full py-2 px-4 rounded text-left ${
+              activeSection === "deletedlistings"
+                ? "bg-gray-700"
+                : "bg-gray-800 hover:bg-gray-600"
+            }`}
+          >
+            All Deleted Listings
+          </button>
         </nav>
       </aside>
 
@@ -133,7 +144,11 @@ const Admin = () => {
               ? "Manage Users"
               : activeSection === "listings"
               ? "Manage Listings"
-              : "Deleted Users"}
+              : activeSection === "deletedusers"
+              ? "Deleted Users"
+              : activeSection === "deletedlistings"
+              ? "Deleted Listings"
+              : "Default Section"}
           </h1>
         </div>
 
@@ -150,6 +165,10 @@ const Admin = () => {
           ) : activeSection === "deletedusers" ? (
             <div className="bg-white shadow-lg rounded-lg p-6">
               <DeletedUsers />
+            </div>
+          ) : activeSection === "deletedlistings" ? (
+            <div className="bg-white shadow-lg rounded-lg p-6">
+              <DeletedListing />
             </div>
           ) : null // Handle cases where no section is active
         }
