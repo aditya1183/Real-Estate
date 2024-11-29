@@ -320,7 +320,7 @@ export default function Profile() {
 
       {/* // model code here  */}
 
-      <p className="text-red-700 mt-5">{error ? error : ""}</p>
+      {/* <p className="text-red-700 mt-5">{error ? error : ""}</p> */}
 
       {/* Modal */}
       {isModalOpen && (

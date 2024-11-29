@@ -5,6 +5,7 @@ import {
   signOut,
   signin,
   signup,
+  verifyOtp,
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -15,7 +16,9 @@ router.post("/signin", signin);
 router.post("/google", google);
 router.get("/signout", signOut);
 
-router.post("/checkaccestoken", (req, res) => {
+router.post("/verifyotp", verifyOtp);
+
+router.post("/checkaccestoken", async (req, res) => {
   const token = req.cookies.access_token;
 
   if (!token) {

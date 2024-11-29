@@ -18,7 +18,7 @@ import { generateAccessToken } from "./token.js";
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
 
-  if (!token) return next(errorHandler(401, "Unauthorized"));
+  if (!token) return next(errorHandler(401, "Unauthorized aditya"));
 
   jwt.verify(token, "adityaaditya", (err, user) => {
     if (err) {
@@ -28,7 +28,8 @@ export const verifyToken = (req, res, next) => {
       if (!refreshToken) return next(errorHandler(401, "Unauthorized"));
 
       jwt.verify(refreshToken, "adityaaditya", (refreshErr, userData) => {
-        if (refreshErr) return next(errorHandler(403, "Forbidden"));
+        if (refreshErr)
+          return next(errorHandler(403, "Forbidden refech token expired"));
 
         const newAccessToken = generateAccessToken(userData.id);
         res.cookie("access_token", newAccessToken, { httpOnly: true });

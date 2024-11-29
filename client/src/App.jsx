@@ -21,6 +21,7 @@ import Admin from "./Admin/Admin";
 import GetAllListings from "./Admin/GetAllListings";
 import AdditionalDetails from "./pages/AdditionalDetails";
 import Getalldeletedusers from "./Admin/Getalldeletedusers";
+import OtpVerification from "./pages/OtpVerification";
 export default function App() {
   return (
     <BrowserRouter>
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="/additionaldetails" element={<AdditionalDetails />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/alldeletedusers" element={<Getalldeletedusers />} />
+        <Route path="/verifyotp" element={<OtpVerification />} />
       </Routes>
     </BrowserRouter>
   );
