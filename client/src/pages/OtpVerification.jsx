@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function OtpVerification() {
   const [otp, setOtp] = useState("");
@@ -16,23 +17,28 @@ export default function OtpVerification() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const res = await axios.post("/api/auth/verifyotp", {
         email: location.state.email,
+        username: location.state.username,
+        password: location.state.password,
         otp,
       });
 
       const data = res.data;
-      console.log(data);
 
-      if (data.message === "OTP verified successfully!") {
+      if (data.message === "OTP verified and user registered successfully!") {
+        toast.info("OTP verified and user registered successfully!");
         setError(null);
         navigate("/sign-in");
-      } else {
-        setError(data.message || "OTP verification failed.");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Server error");
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error); // Display specific error from backend
+      } else {
+        setError("OTP verification failed.");
+      }
     } finally {
       setLoading(false);
     }
@@ -57,7 +63,25 @@ export default function OtpVerification() {
           {loading ? "Verifying..." : "Verify OTP"}
         </button>
       </form>
-      {error && <p className="text-red-500 mt-5">{error}</p>}
+      {error && (
+        <div className="mt-5 p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 flex items-center gap-3">
+          <svg
+            className="w-6 h-6 text-red-500"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M18.364 5.636a9 9 0 11-12.728 0m12.728 0L12 12m0 0l-6.364-6.364m12.728 0a9 9 0 01-12.728 0M12 12v6"
+            />
+          </svg>
+          <p className="font-medium">{error}</p>
+        </div>
+      )}
     </div>
   );
 }

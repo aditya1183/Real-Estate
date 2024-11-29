@@ -22,9 +22,12 @@ import GetAllListings from "./Admin/GetAllListings";
 import AdditionalDetails from "./pages/AdditionalDetails";
 import Getalldeletedusers from "./Admin/Getalldeletedusers";
 import OtpVerification from "./pages/OtpVerification";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function App() {
   return (
     <BrowserRouter>
+      <ToastContainer position="top-center" autoClose={3000} />
       <Header />
 
       <Routes>

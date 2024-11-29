@@ -7,21 +7,20 @@ import {
   deleteUserSuccess,
 } from "../redux/user/userSlice";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const VerifyPasswordtoDeleteAccount = () => {
   const [password, setpassword] = useState("");
   const [loading, setloading] = useState(false);
   const [username, setusername] = useState("");
-  const [localError, setLocalError] = useState(null); // Local error state
+  const [error, seterror] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { currentUser, error } = useSelector((state) => state.user);
-  console.log(currentUser);
+  const { currentUser } = useSelector((state) => state.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLocalError(null); // Reset local error
     try {
       dispatch(deleteUserStart());
       setloading(true);
@@ -35,24 +34,28 @@ const VerifyPasswordtoDeleteAccount = () => {
           },
         }
       );
+
       const data = res.data;
-      console.log(data);
 
       if (!data.success) {
         dispatch(deleteUserFailure(data.message));
-        setLocalError(data.message);
-
-        setloading(false); // Stop loading on failure
+        //toast.error(data.message); // Display backend error message
+        seterror(data.message);
+        setloading(false);
         return;
       }
 
       dispatch(deleteUserSuccess(data));
+      toast.success("Successfully Deleted Your Account!"); // Success toast
       setloading(false);
-      navigate("/");
+      navigate("/"); // Redirect after success
     } catch (error) {
-      dispatch(deleteUserFailure(error.message));
-      setLocalError(error.message); // Show error message
-      setloading(false); // Stop loading on failure
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong!";
+      seterror(errorMessage);
+      dispatch(deleteUserFailure(errorMessage));
+      //toast.error(errorMessage); // Show error toast with specific message
+      setloading(false);
     }
   };
 
@@ -61,7 +64,7 @@ const VerifyPasswordtoDeleteAccount = () => {
       <h1 className="text-3xl text-center font-semibold my-7">
         Delete Account
       </h1>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <img
           src={currentUser.avatar}
           alt="profile"
@@ -87,23 +90,36 @@ const VerifyPasswordtoDeleteAccount = () => {
           value={password}
           onChange={(e) => setpassword(e.target.value)}
         />
-
         <button
           disabled={
             loading ||
             !(username === currentUser.username && password.length > 5)
           }
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-          onClick={handleSubmit}
         >
           {loading ? "Deleting..." : "Delete Account"}
         </button>
-
-        {/* Display error message */}
-        {(localError || error) && (
-          <p className="text-red-500 text-center mt-3">{localError || error}</p>
-        )}
       </form>
+
+      {error && (
+        <div className="mt-5 p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 flex items-center gap-3">
+          <svg
+            className="w-6 h-6 text-red-500"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M18.364 5.636a9 9 0 11-12.728 0m12.728 0L12 12m0 0l-6.364-6.364m12.728 0a9 9 0 01-12.728 0M12 12v6"
+            />
+          </svg>
+          <p className="font-medium">{error}</p>
+        </div>
+      )}
     </div>
   );
 };

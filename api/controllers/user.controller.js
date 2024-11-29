@@ -58,7 +58,6 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
-// export const deleteUser = async (req, res, next) => {
 //   try {
 //     // Log the request body and user object
 
@@ -104,62 +103,114 @@ export const updateUser = async (req, res, next) => {
 //   }
 // };
 
+// export const deleteUser = async (req, res, next) => {
+//   try {
+//     const { password } = req.body;
 
+//     if (!password) {
+//       return next(
+//         errorHandler(400, "Password is required to delete the account")
+//       );
+//     }
+
+//     // Fetch the user using their ID
+//     const finduser = await User.findById(req.params.id);
+
+//     if (!finduser) {
+//       return next(errorHandler(404, "User not found"));
+//     }
+
+//     // Check if the user is authorized
+//     if (req.params.id !== finduser._id.toString()) {
+//       return next(errorHandler(401, "You can only delete your own account!"));
+//     }
+
+//     // Validate the provided password
+//     const validPassword = bcryptjs.compareSync(password, finduser.password);
+//     if (!validPassword) {
+//       return next(errorHandler(401, "Invalid password"));
+//     }
+
+//     // Move user data to DeletedUser model
+//     const deletedUserData = new DeleteUser({
+//       username: finduser.username,
+//       email: finduser.email,
+//       avatar: finduser.avatar,
+//       deletionDate: new Date(), // Adding deletion timestamp
+//     });
+//     await deletedUserData.save();
+
+//     // Delete the user from User collection
+//     await User.findByIdAndDelete(req.params.id);
+
+//     // Send email notification
+//     await sendEmail({
+//       to: finduser.email,
+//       subject: "Account Deleted",
+//       html: `Hello ${finduser.username},\n\nYour account has been successfully deleted. We hope to see you again!`,
+//     });
+
+//     // Clear cookies and send response
+//     res.clearCookie("access_token");
+//     res
+//       .status(200)
+//       .json({ success: true, message: "Sucessfull Deleted your Account !" });
+//   } catch (error) {
+//     console.error("Error during user deletion:", error);
+//     next(error);
+//   }
+// };
 
 export const deleteUser = async (req, res, next) => {
   try {
     const { password } = req.body;
 
     if (!password) {
-      return next(errorHandler(400, "Password is required to delete the account"));
+      return next(
+        errorHandler(400, "Password is required to delete the account")
+      );
     }
 
-    // Fetch the user using their ID
     const finduser = await User.findById(req.params.id);
-
     if (!finduser) {
       return next(errorHandler(404, "User not found"));
     }
 
-    // Check if the user is authorized
     if (req.params.id !== finduser._id.toString()) {
       return next(errorHandler(401, "You can only delete your own account!"));
     }
 
-    // Validate the provided password
     const validPassword = bcryptjs.compareSync(password, finduser.password);
     if (!validPassword) {
       return next(errorHandler(401, "Invalid password"));
     }
 
-    // Move user data to DeletedUser model
+    // Archive and delete user logic
     const deletedUserData = new DeleteUser({
       username: finduser.username,
       email: finduser.email,
       avatar: finduser.avatar,
-      deletionDate: new Date(), // Adding deletion timestamp
+      deletionDate: new Date(),
     });
     await deletedUserData.save();
 
-    // Delete the user from User collection
     await User.findByIdAndDelete(req.params.id);
 
-    // Send email notification
     await sendEmail({
       to: finduser.email,
       subject: "Account Deleted",
-      html: `Hello ${finduser.username},\n\nYour account has been successfully deleted. We hope to see you again!`,
+      html: `Hello ${finduser.username},<br><br>Your account has been successfully deleted. We hope to see you again!`,
     });
 
-    // Clear cookies and send response
     res.clearCookie("access_token");
-    res.status(200).json({ success: true, message: "User has been deleted and archived!" });
+    res
+      .status(200)
+      .json({ success: true, message: "User has been deleted and archived!" });
   } catch (error) {
     console.error("Error during user deletion:", error);
     next(error);
   }
 };
-
 
 export const getUserListings = async (req, res, next) => {
   if (req.user.id === req.params.id) {

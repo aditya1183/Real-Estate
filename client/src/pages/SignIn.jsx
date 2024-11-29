@@ -13,7 +13,7 @@ export default function SignIn() {
   const [formData, setFormData] = useState({});
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const location=useLocation();
+  const location = useLocation();
   const from = location.state?.from || "/";
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -22,32 +22,61 @@ export default function SignIn() {
       [e.target.id]: e.target.value,
     });
   };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     dispatch(signInStart());
+
+  //     const res = await axios.post("/api/auth/signin", formData, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     const data = res.data;
+  //     console.log(data);
+  //     if (data.success === false) {
+  //       dispatch(signInFailure(data.message));
+  //       return;
+  //     }
+  //     dispatch(signInSuccess(data));
+  //     navigate(from);
+  //   } catch (error) {
+  //     dispatch(signInFailure(error.message));
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      // const res = await fetch('/api/auth/signin', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(formData),
-      // });
+
       const res = await axios.post("/api/auth/signin", formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+
       const data = res.data;
-      console.log(data);
+
       if (data.success === false) {
         dispatch(signInFailure(data.message));
         return;
       }
+
       dispatch(signInSuccess(data));
       navigate(from);
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        // Display custom error message from backend
+        dispatch(signInFailure(error.response.data.message));
+      } else {
+        // Fallback to generic error message
+        dispatch(signInFailure("Something went wrong. Please try again."));
+      }
     }
   };
   return (
@@ -90,7 +119,26 @@ export default function SignIn() {
           </Link>
         </div>
       </div>
-      {error && <p className="text-red-500 mt-5">{error}</p>}
+
+      {error && (
+        <div className="mt-5 p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 flex items-center gap-3">
+          <svg
+            className="w-6 h-6 text-red-500"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M18.364 5.636a9 9 0 11-12.728 0m12.728 0L12 12m0 0l-6.364-6.364m12.728 0a9 9 0 01-12.728 0M12 12v6"
+            />
+          </svg>
+          <p className="font-medium">{error}</p>
+        </div>
+      )}
     </div>
   );
 }
