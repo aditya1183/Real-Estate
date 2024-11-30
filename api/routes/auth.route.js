@@ -18,22 +18,81 @@ router.get("/signout", signOut);
 
 router.post("/verifyotp", verifyOtp);
 
-router.post("/checkaccestoken", async (req, res) => {
-  const token = req.cookies.access_token;
+// router.post("/checkaccestoken", async (req, res) => {
+//   const token = req.cookies.access_token;
 
-  if (!token) {
-    return res.status(404).json({ message: "Token not found! " });
+//   if (!token) {
+//     return res.status(404).json({ message: "Token not found! " });
+//   }
+
+//   jwt.verify(token, "adityaaditya", (err, user) => {
+//     if (err) {
+//       return res
+//         .status(404)
+//         .json({ message: "Token is expired or invalid! aditya" });
+//     }
+
+//     // Token is valid
+//     res.status(200).json({ message: "Token is valid!", user });
+//   });
+// });
+
+router.post("/checkaccestoken", async (req, res) => {
+  const accessToken = req.cookies.access_token;
+  const refreshToken = req.cookies.refresh_token;
+
+  // Check if access token exists
+  if (!accessToken) {
+    return res.status(404).json({ message: "Access token not found!" });
   }
 
-  jwt.verify(token, "adityaaditya", (err, user) => {
+  // Verify access token
+  jwt.verify(accessToken, "adityaaditya", (err, user) => {
     if (err) {
-      return res
-        .status(404)
-        .json({ message: "Token is expired or invalid! aditya" });
-    }
+      // If access token is expired or invalid, check refresh token
+      if (
+        err.name === "TokenExpiredError" ||
+        err.name === "JsonWebTokenError"
+      ) {
+        if (!refreshToken) {
+          return res.status(404).json({ message: "Refresh token not found!" });
+        }
 
-    // Token is valid
-    res.status(200).json({ message: "Token is valid!", user });
+        // Verify refresh token
+        jwt.verify(refreshToken, "adityaaditya", (refreshErr, decoded) => {
+          if (refreshErr) {
+            return res
+              .status(403)
+              .json({ message: "Refresh token expired or invalid!" });
+          }
+
+          // Generate a new access token if refresh token is valid
+          const newAccessToken = jwt.sign(
+            { id: decoded.id, username: decoded.username },
+            "adityaaditya",
+            { expiresIn: "5m" } // New access token valid for 30 minutes
+          );
+
+          res.cookie("access_token", newAccessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+          });
+
+          return res.status(200).json({
+            message: "New access token generated!",
+            accessToken: newAccessToken,
+          });
+        });
+      } else {
+        return res
+          .status(403)
+          .json({ message: "Access token is invalid! Please login again." });
+      }
+    } else {
+      // Access token is valid
+      res.status(200).json({ message: "Access token is valid!", user });
+    }
   });
 });
 

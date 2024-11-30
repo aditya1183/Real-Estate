@@ -9,9 +9,6 @@ import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
 import crypto from "crypto";
 import { otpVerificationTemplate } from "../mailtemplates/OtpVerificationTemplate.js";
 
-
-
-
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   const otp = crypto.randomInt(100000, 999999).toString(); // Generate 6-digit OTP
@@ -31,6 +28,7 @@ export const signup = async (req, res, next) => {
     }
 
     // Save OTP to the OTP collection
+    const checkifemailpresentinotpdb = await Otp.findOneAndDelete({ email });
     await Otp.create({
       email,
       otp,
@@ -38,6 +36,8 @@ export const signup = async (req, res, next) => {
     });
 
     // Send OTP via email
+
+    console.log("check if otp present of not ", checkifemailpresentinotpdb);
     await sendEmail({
       to: email,
       subject: "Your OTP for Account Verification",
@@ -55,6 +55,7 @@ export const signup = async (req, res, next) => {
 
 export const verifyOtp = async (req, res, next) => {
   const { email, otp, username, password } = req.body;
+
   console.log(req.body);
 
   try {
@@ -114,11 +115,11 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 30 * 60 * 1000,
+        maxAge: 5 * 60 * 1000,
       }) // 15 minutes
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: 30 * 60 * 1000,
+        maxAge: 5 * 60 * 1000,
       }) // 7 days
       .status(200)
       .json(rest);
