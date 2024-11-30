@@ -24,6 +24,8 @@ import Getalldeletedusers from "./Admin/Getalldeletedusers";
 import OtpVerification from "./pages/OtpVerification";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "./Loading/Loadingspinner";
+import OtpVerificationtoPasswordReset from "./pages/OtpVerificationtoPasswordReset";
 export default function App() {
   return (
     <BrowserRouter>
@@ -76,7 +78,8 @@ export default function App() {
           element={<VerifyPasswordtoDeleteAccount />}
         />
         <Route path="/forgottenpassword" element={<ForgottenPassword />} />
-        <Route path="/resetpassword/" element={<ResetPassword />} />
+
+        <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/getalluser/" element={<AllUsers />} />
         <Route path="/singleuserInfo/:userId" element={<SingleUserInfo />} />
         <Route path="/getalllistings" element={<GetAllListings />} />
@@ -84,6 +87,10 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/alldeletedusers" element={<Getalldeletedusers />} />
         <Route path="/verifyotp" element={<OtpVerification />} />
+        <Route
+          path="/otpverificationtopasswordreset"
+          element={<OtpVerificationtoPasswordReset />}
+        />
       </Routes>
     </BrowserRouter>
   );

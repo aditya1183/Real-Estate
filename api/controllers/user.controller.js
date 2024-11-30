@@ -238,3 +238,27 @@ export const getUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getuserinfoforresetpage = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    // Validate that email is provided
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ email }).select("-password"); // Exclude password
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Send user details (excluding password)
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

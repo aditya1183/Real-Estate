@@ -2,12 +2,17 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import {
   google,
+  resetpassword,
   signOut,
   signin,
   signup,
   verifyOtp,
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
+import {
+  forgootenpassword,
+  verifyOtptoresetpassword,
+} from "../controllers/Forgootenpassword.js";
 
 const router = express.Router();
 
@@ -17,6 +22,10 @@ router.post("/google", google);
 router.get("/signout", signOut);
 
 router.post("/verifyotp", verifyOtp);
+
+router.post("/forgootenpassword", forgootenpassword);
+router.post("/verifyotptoresetpassword", verifyOtptoresetpassword);
+router.post("/resetpassword", resetpassword);
 
 // router.post("/checkaccestoken", async (req, res) => {
 //   const token = req.cookies.access_token;
