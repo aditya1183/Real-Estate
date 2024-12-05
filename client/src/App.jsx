@@ -14,6 +14,7 @@ import VerifyPasswordtoDeleteAccount from "./pages/VerifyPasswordtoDeleteAccount
 import ForgottenPassword from "./pages/ForgottenPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminProtuctedRoute from "./Admin/AdminProtuctedRoute";
+import ResetPasswordProtectroute from "./pages/ResetPasswordProtectroute";
 
 import Protuctedroute from "./components/Protuctedroute";
 import AllUsers from "./Admin/AllUsers";
@@ -81,7 +82,14 @@ export default function App() {
         />
         <Route path="/forgottenpassword" element={<ForgottenPassword />} />
 
-        <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route
+          path="/resetpassword"
+          element={
+            <ResetPasswordProtectroute>
+              <ResetPassword />
+            </ResetPasswordProtectroute>
+          }
+        />
         <Route path="/getalluser/" element={<AllUsers />} />
         <Route path="/singleuserInfo/:userId" element={<SingleUserInfo />} />
         <Route path="/getalllistings" element={<GetAllListings />} />
@@ -99,7 +107,11 @@ export default function App() {
         <Route path="/verifyotp" element={<OtpVerification />} />
         <Route
           path="/otpverificationtopasswordreset"
-          element={<OtpVerificationtoPasswordReset />}
+          element={
+            <ResetPasswordProtectroute>
+              <OtpVerificationtoPasswordReset />
+            </ResetPasswordProtectroute>
+          }
         />
         <Route path="/adminlogin" element={<AdminLogin />} />
       </Routes>

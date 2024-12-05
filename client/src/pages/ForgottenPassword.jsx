@@ -106,6 +106,9 @@ const ForgottenPassword = () => {
           },
         }
       );
+      if (res.data.message === "OTP sent to email") {
+        localStorage.setItem("resetEmail", email);
+      }
 
       if (res.data.message === "OTP sent to email") {
         toast.success(

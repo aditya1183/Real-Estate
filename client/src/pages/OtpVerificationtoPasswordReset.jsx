@@ -33,7 +33,7 @@ const OtpVerificationtoPasswordReset = () => {
         email,
       });
 
-      localStorage.setItem("resetEmail", email);
+      // localStorage.setItem("resetEmail", email);
 
       if (res.data.message === "OTP verified successfully") {
         toast.info("OTP verified! Redirecting to reset password...", {
