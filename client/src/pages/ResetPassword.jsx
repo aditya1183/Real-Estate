@@ -1,16 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function ResetPassword() {
   const email = localStorage.getItem("resetEmail");
+  const navigate = useNavigate();
+
   const [userinfo, setuserinfo] = useState({});
   const [loading, setloading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [ispasswordsmae, setispasswordsame] = useState(true);
   const [error, seterror] = useState("");
 
   useEffect(() => {
@@ -34,36 +35,49 @@ function ResetPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    seterror(""); // Clear previous error
+
     if (newPassword !== confirmPassword) {
-      setispasswordsame(false);
-    }
-    if (newPassword === confirmPassword) {
-      setispasswordsame(true);
+      seterror("Passwords do not match.");
+      return;
     }
 
-    const res = await axios.post(
-      "/api/auth/resetpassword",
-      { email, newPassword },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    try {
+      setloading(true);
+      const res = await axios.post(
+        "/api/auth/resetpassword",
+        { email, newPassword },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.data.message === "Password reset successfully.") {
+        localStorage.removeItem("resetEmail");
       }
-    );
-    console.log(res);
-
-    return "aditya vahistha";
+      toast.success(
+        "Password reset successfully! Redirecting to login page..."
+      );
+      setTimeout(() => {
+        navigate("/sign-in"); // Redirect after 2 seconds
+      }, 2000);
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      seterror("Failed to reset password. Please try again.");
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100">
+      <ToastContainer /> {/* Toast container for notifications */}
       {loading && (
-        //
         <div className="absolute inset-0 bg-white bg-opacity-80 z-10 flex items-center justify-center">
           <div className="loader border-t-4 border-blue-500 rounded-full w-24 h-24 animate-spin"></div>
         </div>
       )}
-
       <div
         className={`p-8 max-w-xl w-full bg-white shadow-md rounded-lg z-0 ${
           loading ? "opacity-20" : "opacity-100"
@@ -86,27 +100,23 @@ function ResetPassword() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <input
-            type="text"
+            type="password"
             placeholder="Enter New Password"
             className="border p-4 rounded-lg"
-            id="password"
             value={newPassword}
-            onChange={(e) => {
-              setNewPassword(e.target.value);
-            }}
+            onChange={(e) => setNewPassword(e.target.value)}
           />
           <input
             type="password"
-            placeholder="Reenter New Password"
+            placeholder="Re-enter New Password"
             className="border p-4 rounded-lg"
-            id="password"
             value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-            }}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <button
-            disabled={loading || newPassword !== confirmPassword}
+            disabled={
+              loading || newPassword !== confirmPassword || !newPassword
+            }
             className={`bg-slate-700 text-white p-4 rounded-lg uppercase hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed ${
               loading || newPassword !== confirmPassword
                 ? ""
@@ -115,7 +125,8 @@ function ResetPassword() {
           >
             Reset Password
           </button>
-          {!ispasswordsmae && (
+
+          {error && (
             <div className="mt-5 p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 flex items-center gap-3">
               <svg
                 className="w-6 h-6 text-red-500"
@@ -135,26 +146,6 @@ function ResetPassword() {
             </div>
           )}
         </form>
-
-        {error && (
-          <div className="mt-5 p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 flex items-center gap-3">
-            <svg
-              className="w-6 h-6 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M18.364 5.636a9 9 0 11-12.728 0m12.728 0L12 12m0 0l-6.364-6.364m12.728 0a9 9 0 01-12.728 0M12 12v6"
-              />
-            </svg>
-            <p className="font-medium">{error}</p>
-          </div>
-        )}
       </div>
     </div>
   );

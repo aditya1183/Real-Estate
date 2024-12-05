@@ -13,11 +13,12 @@ import Search from "./pages/Search";
 import VerifyPasswordtoDeleteAccount from "./pages/VerifyPasswordtoDeleteAccount";
 import ForgottenPassword from "./pages/ForgottenPassword";
 import ResetPassword from "./pages/ResetPassword";
+import AdminProtuctedRoute from "./Admin/AdminProtuctedRoute";
 
 import Protuctedroute from "./components/Protuctedroute";
 import AllUsers from "./Admin/AllUsers";
 import SingleUserInfo from "./Admin/singleUserInfo";
-import Admin from "./Admin/Admin";
+import Admin, { adminloader } from "./Admin/Admin";
 import GetAllListings from "./Admin/GetAllListings";
 import AdditionalDetails from "./pages/AdditionalDetails";
 import Getalldeletedusers from "./Admin/Getalldeletedusers";
@@ -25,6 +26,7 @@ import OtpVerification from "./pages/OtpVerification";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "./Loading/Loadingspinner";
+import AdminLogin from "./Admin/Adminlogin";
 import OtpVerificationtoPasswordReset from "./pages/OtpVerificationtoPasswordReset";
 export default function App() {
   return (
@@ -84,13 +86,22 @@ export default function App() {
         <Route path="/singleuserInfo/:userId" element={<SingleUserInfo />} />
         <Route path="/getalllistings" element={<GetAllListings />} />
         <Route path="/additionaldetails" element={<AdditionalDetails />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminProtuctedRoute>
+              <Admin />
+            </AdminProtuctedRoute>
+          }
+          loader={adminloader}
+        />
         <Route path="/alldeletedusers" element={<Getalldeletedusers />} />
         <Route path="/verifyotp" element={<OtpVerification />} />
         <Route
           path="/otpverificationtopasswordreset"
           element={<OtpVerificationtoPasswordReset />}
         />
+        <Route path="/adminlogin" element={<AdminLogin />} />
       </Routes>
     </BrowserRouter>
   );

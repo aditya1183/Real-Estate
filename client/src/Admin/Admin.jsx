@@ -83,7 +83,15 @@ import GetAllListings from "./GetAllListings";
 import DeletedUsers from "./Getalldeletedusers"; // Import the new component
 import { useEffect } from "react";
 import DeletedListing from "./DeletedListings";
-
+import { toast } from "react-toastify";
+export const adminloader = () => {
+  const admintoken = localStorage.getItem("adminToken");
+  console.log("admin token ", admintoken);
+  if (!admintoken) {
+    return toast.error("You are Not to Uutherized To do this");
+  }
+  return null;
+};
 const Admin = () => {
   const [activeSection, setActiveSection] = useState("users");
 
