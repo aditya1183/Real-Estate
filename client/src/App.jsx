@@ -30,8 +30,13 @@ import LoadingSpinner from "./Loading/Loadingspinner";
 import Error from "./pages/Error";
 import AdminLogin from "./Admin/Adminlogin";
 import OtpVerificationtoPasswordReset from "./pages/OtpVerificationtoPasswordReset";
-
+import AdminotpVeriFication from "./Admin/AdminotpVeriFication";
+import removeAdmintoken from "../src/hooks/useAdminToken";
+import { useEffect } from "react";
 export default function App() {
+  useEffect(() => {
+    removeAdmintoken();
+  }, []);
   return (
     <BrowserRouter>
       <ToastContainer position="top-center" autoClose={3000} />
@@ -112,6 +117,10 @@ export default function App() {
           }
         />
         <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route
+          path="/adminotpverification"
+          element={<AdminotpVeriFication />}
+        />
         <Route path="*" element={<Error />} /> {/* Catch-all route */}
       </Routes>
     </BrowserRouter>

@@ -8,17 +8,13 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   localStorage.removeItem("adminToken");
-  // }, []);
-  // useEffect(() => {
-  //   // Check for logintoken in local storage and redirect if not present
-  //   if (!localStorage.getItem("logintoken")) {
-  //     toast.error("Please Login First");
-
-  //     navigate("/sign-in");
-  //   }
-  // }, [navigate]);
+  useEffect(() => {
+    localStorage.removeItem("adminToken");
+    if (localStorage.getItem("logintoken")) {
+      toast.error("Please First Logout");
+      return navigate("/");
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,8 +26,13 @@ const AdminLogin = () => {
         password,
       });
       console.log(response.data);
-      localStorage.setItem("adminToken", response.data.token);
-      navigate("/admin"); // Navigate to the admin dashboard
+
+      toast.info("Otp is Send To Registeted email");
+      navigate("/adminotpverification", {
+        state: {
+          email: email,
+        },
+      }); // Navigate to the admin dashboard
     } catch (err) {
       setError(
         err.response?.data?.message || "Login failed. Please try again."

@@ -8,7 +8,7 @@ import {
   signOutUserFailure,
   signOutUserSuccess,
 } from "../redux/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux"; 
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -99,5 +99,6 @@ export default function Header() {
         </ul>
       </div>
     </header>
+    
   );
 }
