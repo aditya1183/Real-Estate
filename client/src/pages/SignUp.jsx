@@ -1,6 +1,4 @@
-
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -12,6 +10,12 @@ export default function SignUp() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.getItem("logintoken")) {
+      toast.error("You Are Already Logged in ");
+      return navigate("/");
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({

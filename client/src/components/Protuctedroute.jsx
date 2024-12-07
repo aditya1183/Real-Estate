@@ -23,6 +23,8 @@ const ProtectedApp = ({ children }) => {
         dispatch(signOutUserFailure(data.message));
         return;
       }
+      localStorage.removeItem("logintoken");
+      localStorage.removeItem("adminToken");
       dispatch(signOutUserSuccess(data));
     } catch (error) {
       dispatch(deleteUserFailure(data.message));

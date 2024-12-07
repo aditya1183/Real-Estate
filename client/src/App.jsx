@@ -27,8 +27,10 @@ import OtpVerification from "./pages/OtpVerification";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "./Loading/Loadingspinner";
+import Error from "./pages/Error";
 import AdminLogin from "./Admin/Adminlogin";
 import OtpVerificationtoPasswordReset from "./pages/OtpVerificationtoPasswordReset";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -56,11 +58,9 @@ export default function App() {
             </Protuctedroute>
           }
         />
-
         {/* <Route path="/profile" element={<Profile />} />
         <Route path="/create-listing" element={<CreateListing />} />
         <Route path="/update-listing/:listingId" element={<UpdateListing />} /> */}
-
         <Route
           element={
             <Protuctedroute>
@@ -75,13 +75,11 @@ export default function App() {
             element={<UpdateListing />}
           />
         </Route>
-
         <Route
           path="/veriftpasswordtodeleteaccount/:id"
           element={<VerifyPasswordtoDeleteAccount />}
         />
         <Route path="/forgottenpassword" element={<ForgottenPassword />} />
-
         <Route
           path="/resetpassword"
           element={
@@ -114,6 +112,7 @@ export default function App() {
           }
         />
         <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route path="*" element={<Error />} /> {/* Catch-all route */}
       </Routes>
     </BrowserRouter>
   );

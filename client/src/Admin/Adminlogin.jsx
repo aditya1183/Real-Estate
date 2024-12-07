@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  // useEffect(() => {
+  //   localStorage.removeItem("adminToken");
+  // }, []);
+  // useEffect(() => {
+  //   // Check for logintoken in local storage and redirect if not present
+  //   if (!localStorage.getItem("logintoken")) {
+  //     toast.error("Please Login First");
+
+  //     navigate("/sign-in");
+  //   }
+  // }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

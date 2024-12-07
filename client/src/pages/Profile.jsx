@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   updateUserStart,
@@ -15,6 +15,8 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import removeadmintoken from "../hooks/useAdminToken";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -27,6 +29,10 @@ export default function Profile() {
   const [userListings, setUserListings] = useState([]);
   const [showListingsError, setShowListingsError] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    removeadmintoken();
+  }, []);
 
   const handleFileUpload = async (file) => {
     const formData = new FormData();
@@ -97,6 +103,9 @@ export default function Profile() {
         dispatch(signOutUserFailure(data.message));
         return;
       }
+      localStorage.removeItem("logintoken");
+      toast.info("Logout SucessFully ... ")
+      localStorage.removeItem("adminToken");
       dispatch(signOutUserSuccess(data));
     } catch (error) {
       dispatch(signOutUserFailure(data.message));
@@ -174,7 +183,7 @@ export default function Profile() {
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <Link
-        to="/admin"
+        to="/adminlogin"
         className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80 gap-2"
       >
         <button>Admin</button>
