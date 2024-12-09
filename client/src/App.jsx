@@ -15,6 +15,7 @@ import ForgottenPassword from "./pages/ForgottenPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdminProtuctedRoute from "./Admin/AdminProtuctedRoute";
 import ResetPasswordProtectroute from "./pages/ResetPasswordProtectroute";
+import Footer from "./pages/Footer.jsx";
 
 import Protuctedroute from "./components/Protuctedroute";
 import AllUsers from "./Admin/AllUsers";
@@ -33,6 +34,7 @@ import OtpVerificationtoPasswordReset from "./pages/OtpVerificationtoPasswordRes
 import AdminotpVeriFication from "./Admin/AdminotpVeriFication";
 import removeAdmintoken from "../src/hooks/useAdminToken";
 import { useEffect } from "react";
+import DashBoard from "./ProfileDashboard/Profiledashboard.jsx";
 export default function App() {
   useEffect(() => {
     removeAdmintoken();
@@ -121,8 +123,10 @@ export default function App() {
           path="/adminotpverification"
           element={<AdminotpVeriFication />}
         />
+        <Route path="/dashboard" element={<DashBoard />} />
         <Route path="*" element={<Error />} /> {/* Catch-all route */}
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

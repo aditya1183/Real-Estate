@@ -1,6 +1,8 @@
 import React from "react";
 import removeAdmintoken from "../hooks/useAdminToken";
 import { useEffect } from "react";
+import HomeLengo from "../AboutPages/Pages/HomeLengo.jsx";
+import Team from "../AboutPages/Pages/Team.jsx";
 
 export default function About() {
   useEffect(() => {
@@ -8,7 +10,9 @@ export default function About() {
   }, []);
   return (
     <div className="py-20 px-4 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4 text-slate-800">
+      <HomeLengo />
+      <Team />
+      {/* <h1 className="text-3xl font-bold mb-4 text-slate-800">
         About Sahand Estate
       </h1>
       <p className="mb-4 text-slate-700">
@@ -30,7 +34,7 @@ export default function About() {
         service to our clients. We believe that buying or selling a property
         should be an exciting and rewarding experience, and we are dedicated to
         making that a reality for each and every one of our clients.
-      </p>
+      </p> */}
     </div>
   );
 }

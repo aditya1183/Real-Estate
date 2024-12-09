@@ -104,7 +104,7 @@ export default function Profile() {
         return;
       }
       localStorage.removeItem("logintoken");
-      toast.info("Logout SucessFully ... ")
+      toast.info("Logout SucessFully ... ");
       localStorage.removeItem("adminToken");
       dispatch(signOutUserSuccess(data));
     } catch (error) {
@@ -181,7 +181,7 @@ export default function Profile() {
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
+      <h1 className="text-3xl font-semibold text-center my-7">Profile </h1>
       <Link
         to="/adminlogin"
         className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80 gap-2"
