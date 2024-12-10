@@ -11,11 +11,14 @@ import { IoIosCreate } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutUserSuccess } from "../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ProfileDashboardSidebar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const [tab, setTab] = useState("");
 
   useEffect(() => {
@@ -28,12 +31,15 @@ const ProfileDashboardSidebar = () => {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("/api/user/signout", { method: "POST" });
+      const res = await fetch("/api/auth/signout");
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
       } else {
         dispatch(signOutUserSuccess());
+        navigate("/");
+        localStorage.removeItem("logintoken");
+        toast.info("User Logout Sucesfully ..");
       }
     } catch (error) {
       console.log(error.message);

@@ -3,11 +3,21 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import currentuserdetail from "../hooks/usecurrentuserdetail";
+import { toast } from "react-toastify";
 
 export default function CreateListing() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const hasUserDetails = currentuserdetail();
+  function aditya() {
+    if (!hasUserDetails) {
+      toast.error("Please add details before you create a listing");
+      return navigate("?tab=updateProfile");
+    }
+  }
 
+  //aditya();
   const [formData, setFormData] = useState({
     imageUrls: [],
     name: "",

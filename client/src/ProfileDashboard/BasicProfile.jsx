@@ -5,14 +5,25 @@ import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  signOutUserStart,
+  signOutUserFailure,
+  signOutUserSuccess,
+} from "../redux/user/userSlice";
+import { toast } from "react-toastify";
 
 const BasicProfile = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
   const handleFileUpload = async (file) => {
     const formData = new FormData();
     formData.append("file", file); // Ensure `file` is a single file object, not an array
@@ -49,16 +60,21 @@ const BasicProfile = () => {
       dispatch(signOutUserStart());
       const res = await fetch("/api/auth/signout");
       const data = await res.json();
+
       if (data.success === false) {
         dispatch(signOutUserFailure(data.message));
         return;
       }
+
       localStorage.removeItem("logintoken");
+      console.log("aditya vashsitha");
       toast.info("Logout SucessFully ... ");
       localStorage.removeItem("adminToken");
       dispatch(signOutUserSuccess(data));
+      return navigate("/");
     } catch (error) {
-      dispatch(signOutUserFailure(data.message));
+      console.log(error);
+      dispatch(signOutUserFailure(error));
     }
   };
   return (
@@ -160,8 +176,8 @@ const BasicProfile = () => {
         <span onClick={() => setShowModal(true)} className="cursor-pointer">
           Delete Account
         </span>
-        <span onClick={handleSignOut} className="cursor-pointer">
-          Sign Out
+        <span className="cursor-pointer">
+          <button onClick={handleSignOut}>Sign out</button>
         </span>
       </div>
       <div className="w-full flex justify-center mt-6">
