@@ -261,6 +261,7 @@ export default function CreateListing() {
                 onChange={handleChange}
                 value={formData.regularPrice}
               />
+
               <div className="flex flex-col items-center">
                 <p>Regular price</p>
                 {formData.type === "rent" && (
@@ -280,6 +281,7 @@ export default function CreateListing() {
                   onChange={handleChange}
                   value={formData.discountPrice}
                 />
+
                 <div className="flex flex-col items-center">
                   <p>Discounted price</p>
 

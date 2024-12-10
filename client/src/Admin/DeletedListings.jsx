@@ -1,56 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const DeletedListings = () => {
-//   const [deletedListings, setDeletedListings] = useState([]);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const fetchDeletedListings = async () => {
-//       try {
-//         const response = await axios.get(
-//           "/api/admin/delete/getalldeletedlistings",
-//           {
-//             headers: {
-//               "Content-Type": "application/json",
-//             },
-//           }
-//         );
-//         console.log("Deleted Listings Response:", response);
-//         setDeletedListings(response.data);
-//       } catch (err) {
-//         console.error("Error fetching deleted listings:", err);
-//         setError("Failed to fetch deleted listings. Please try again later.");
-//       }
-//     };
-
-//     fetchDeletedListings();
-//   }, []);
-
-//   return (
-//     <div>
-//       <h1>Deleted Listings</h1>
-//       {error && <p className="text-red-500">{error}</p>}
-//       <ul>
-//         {deletedListings.length > 0 ? (
-//           deletedListings.map((listing, index) => (
-//             <li key={index} className="p-2 border-b">
-//               <li> Deleted By {listing.deletedby}</li>
-//               <strong>Name:</strong> {listing.name} |{" "}
-//               <strong>Deleted At:</strong>{" "}
-//               {new Date(listing.deletedAt).toLocaleString()}
-//             </li>
-//           ))
-//         ) : (
-//           <p>No deleted listings found.</p>
-//         )}
-//       </ul>
-//     </div>
-//   );
-// };
-
-// export default DeletedListings;
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -81,8 +28,15 @@ const DeletedListings = () => {
   }, []);
 
   return (
-    <div className="p-4">
+    <div
+      className="p-4 bg-gray-100"
+      style={{
+        height: "90vh",
+        overflowY: "auto", // Add vertical scroll if content exceeds height
+      }}
+    >
       <h1 className="text-2xl font-bold text-center mb-4">Deleted Listings</h1>
+
       {error && <p className="text-red-500 text-center">{error}</p>}
       {deletedListings.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

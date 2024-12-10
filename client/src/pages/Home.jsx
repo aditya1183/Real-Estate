@@ -245,14 +245,14 @@ export default function Home() {
         </div>
 
         {/* Tab Section */}
-        <div className="mt-6 flex space-x-4">
+        {/* <div className="mt-6 flex space-x-4">
           <button className="px-6 py-2 text-lg font-medium rounded-lg bg-blue-500 text-white">
             For Rent
           </button>
           <button className="px-6 py-2 text-lg font-medium rounded-lg bg-gray-200 text-gray-700">
             For Sale
           </button>
-        </div>
+        </div> */}
 
         {/* Search Section */}
         {/* <div className="mt-8 bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
@@ -298,7 +298,7 @@ export default function Home() {
             </button>
           </div>
         </div> */}
-        <div className="mt-8 bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
+        {/* <div className="mt-8 bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -354,7 +354,7 @@ export default function Home() {
               Search
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
       {/* top */}
       <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto">
