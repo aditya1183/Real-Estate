@@ -13,39 +13,6 @@ export const createListing = async (req, res, next) => {
   }
 };
 
-// export  const createListing = async (req, res, next) => {
-//   try {
-//     const { imageUrls, ...listingData } = req.body;
-//     const listing = await Listing.create({
-//       ...listingData,
-//       images: imageUrls, // Store URLs in the database
-//     });
-
-//     res.status(201).json(listing);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// export const deleteListing = async (req, res, next) => {
-//   const listing = await Listing.findById(req.params.id);
-
-//   if (!listing) {
-//     return next(errorHandler(404, "Listing not found!"));
-//   }
-
-//   if (req.user.id !== listing.userRef.toString()) {
-//     return next(errorHandler(401, "You can only delete your own listings!"));
-//   }
-
-//   try {
-//     await Listing.findByIdAndDelete(req.params.id);
-//     res.status(200).json("Listing has been deleted!");
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 export const deleteListing = async (req, res, next) => {
   try {
     // Find the listing by ID
@@ -217,5 +184,22 @@ export const getListings = async (req, res, next) => {
     return res.status(200).json(listings);
   } catch (error) {
     next(error);
+  }
+};
+
+export const findlistinginhomepage = async (req, res) => {
+  const { type, location, keyword } = req.body;
+
+  try {
+    const filters = {};
+    if (type !== "all") filters.type = type;
+    if (location) filters.address = { $regex: location, $options: "i" };
+    if (keyword) filters.keyword = { $regex: keyword, $options: "i" };
+
+    const results = await Listing.find(filters); // Replace `Property` with your actual model name
+    res.json(results);
+  } catch (error) {
+    console.error("Error during search:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

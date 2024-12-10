@@ -9,6 +9,7 @@ import path from "path";
 import adminroute from "./routes/Admin.routes.js";
 import adminauth from "./routes/Authadmin.routes.js";
 import { cloudinaryConnect } from "./config/cloudinary.js";
+import paymentRouter from "./routes/Payment.routes.js";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 app.use("/api/admin/", adminroute);
 app.use("/api/admin/auth", adminauth);
+app.use("/api/payment", paymentRouter);
 
 app.use(express.static(path.join(__dirname, "/client/dist")));
 

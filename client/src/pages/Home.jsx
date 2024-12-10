@@ -161,6 +161,7 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import SwiperCore from "swiper";
+import axios from "axios";
 import "swiper/css/bundle";
 import ListingItem from "../components/ListingItem";
 import LoadingSpinner from "../Loading/Loadingspinner";
@@ -170,6 +171,11 @@ export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
+  const [filters, setFilters] = useState({
+    type: "all",
+    location: "",
+    keyword: "",
+  });
   SwiperCore.use([Navigation]);
   console.log(offerListings);
   useEffect(() => {
@@ -205,6 +211,21 @@ export default function Home() {
     };
     fetchOfferListings();
   }, []);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+  const handleSearch = async () => {
+    try {
+      const response = await axios.post("/api/listing/findlisting", filters);
+      console.log("Search results:", response.data);
+    } catch (error) {
+      console.error("Error searching:", error);
+    }
+  };
   return (
     <div>
       <div
@@ -234,7 +255,7 @@ export default function Home() {
         </div>
 
         {/* Search Section */}
-        <div className="mt-8 bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
+        {/* <div className="mt-8 bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -273,6 +294,63 @@ export default function Home() {
               Search advanced
             </button>
             <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+              Search
+            </button>
+          </div>
+        </div> */}
+        <div className="mt-8 bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Type
+              </label>
+              <select
+                name="type"
+                value={filters.type}
+                onChange={handleInputChange}
+                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All</option>
+                <option value="house">House</option>
+                <option value="apartment">Apartment</option>
+                <option value="villa">Villa</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Location
+              </label>
+              <input
+                type="text"
+                name="location"
+                value={filters.location}
+                onChange={handleInputChange}
+                placeholder="Search Location"
+                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Keyword
+              </label>
+              <input
+                type="text"
+                name="keyword"
+                value={filters.keyword}
+                onChange={handleInputChange}
+                placeholder="Search Keyword"
+                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          <div className="mt-6 flex justify-between items-center">
+            <button className="text-gray-600 hover:underline">
+              Search advanced
+            </button>
+            <button
+              onClick={handleSearch}
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
+            >
               Search
             </button>
           </div>

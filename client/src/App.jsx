@@ -35,6 +35,7 @@ import AdminotpVeriFication from "./Admin/AdminotpVeriFication";
 import removeAdmintoken from "../src/hooks/useAdminToken";
 import { useEffect } from "react";
 import DashBoard from "./ProfileDashboard/Profiledashboard.jsx";
+import Payments from "../src/Payments/Payment.jsx";
 export default function App() {
   useEffect(() => {
     removeAdmintoken();
@@ -124,6 +125,7 @@ export default function App() {
           element={<AdminotpVeriFication />}
         />
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/payment" element={<Payments />} />
         <Route path="*" element={<Error />} /> {/* Catch-all route */}
       </Routes>
       <Footer />
