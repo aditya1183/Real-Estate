@@ -113,6 +113,9 @@ function ResetPassword() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
+          {newPassword !== confirmPassword &&
+            newPassword.length > 1 &&
+            confirmPassword.length > 1 && <p>Password Not Match</p>}
           <button
             disabled={
               loading || newPassword !== confirmPassword || !newPassword

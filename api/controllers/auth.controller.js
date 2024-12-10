@@ -115,11 +115,11 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 5 * 60 * 1000,
+        maxAge: 30 * 60 * 1000,
       }) // 15 minutes
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: 5 * 60 * 1000,
+        maxAge: 30 * 60 * 1000,
       }) // 7 days
       .status(200)
       .json(rest);

@@ -4,6 +4,8 @@ import ProfileDashboardupdateprofile from "./ProfileDashboardupdateprofile.jsx";
 import ProfileDashboarAdditionalDetail from "./ProfileDashboardAddionalDetails";
 import BasicProfile from "./BasicProfile";
 import VerifyPasswordtoDeleteAccount from "../pages/VerifyPasswordtoDeleteAccount.jsx";
+import CreateListing from "../pages/CreateListing.jsx";
+import UserallListings from "./UserallListings.jsx";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 const Profiledashboard = () => {
@@ -34,6 +36,8 @@ const Profiledashboard = () => {
       {/* {tab === "" && <DashboardComp />} */}
       {tab == "updateProfile" && <ProfileDashboardupdateprofile />}
       {tab == "AdditionalDetails" && <ProfileDashboarAdditionalDetail />}
+      {tab == "CreateListing" && <CreateListing />}
+      {tab == "UserallListings" && <UserallListings />}
       {tab == "verifypasswordtodeleteaccount" && (
         <VerifyPasswordtoDeleteAccount />
       )}

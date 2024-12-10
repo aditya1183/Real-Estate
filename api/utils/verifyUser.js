@@ -18,7 +18,7 @@ import { generateAccessToken } from "./token.js";
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
 
-  if (!token) return next(errorHandler(401, "Unauthorized aditya"));
+  if (!token) return next(errorHandler(401, "Unauthorized aditya prachi"));
 
   jwt.verify(token, "adityaaditya", (err, user) => {
     if (err) {

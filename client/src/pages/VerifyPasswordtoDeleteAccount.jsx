@@ -46,6 +46,7 @@ const VerifyPasswordtoDeleteAccount = () => {
       }
 
       dispatch(deleteUserSuccess(data));
+      localStorage.removeItem("logintoken");
       toast.success("Successfully Deleted Your Account!"); // Success toast
       setloading(false);
       navigate("/"); // Redirect after success
