@@ -48,7 +48,7 @@ const usePayment = () => {
             try {
               const validateRes = await fetch("/api/payment/validateorder", {
                 method: "POST",
-                body: JSON.stringify(paymentResponse),
+                body: JSON.stringify({paymentResponse, prefill}),
                 headers: { "Content-Type": "application/json" },
               });
 

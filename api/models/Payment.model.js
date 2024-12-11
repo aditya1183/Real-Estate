@@ -1,8 +1,16 @@
 import mongoose from "mongoose";
 
-
-
 const paymentSchema = new mongoose.Schema({
+  firstname: {
+    type: String,
+  },
+  phone: {
+    type: Number,
+  },
+  email: {
+    type: String,
+  },
+
   razorpay_order_id: {
     type: String,
     required: true,

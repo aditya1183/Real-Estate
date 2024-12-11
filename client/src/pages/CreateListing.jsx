@@ -94,14 +94,13 @@ export default function CreateListing() {
         amount: 1000, // Amount in paise
         receiptId: "receipt_123",
         prefill: {
-          name: "John Doe",
-          email: "john@example.com",
-          contact: "9876543210",
+          name: currentUser.firstname,
+          email: currentUser.email,
+          contact: currentUser.phone,
         },
       });
 
       if (paymentSuccess) {
-        console.log("prachi");
         const response = await fetch("/api/listing/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -115,7 +114,7 @@ export default function CreateListing() {
         }
 
         const data = await response.json();
-        console.log("aditya prachi", data);
+
         console.log(data.status);
         if (data.success === true) {
           toast.success("Listing created successfully!");

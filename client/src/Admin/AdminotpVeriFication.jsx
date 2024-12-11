@@ -68,7 +68,7 @@ const AdminotpVeriFication = () => {
           </i>
         </p>
         <input
-          type="text"
+          type="number"
           className="otp-input"
           maxLength="6"
           value={otp}
