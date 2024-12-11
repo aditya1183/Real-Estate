@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { jsPDF } from "jspdf";
 
 const Paymentsdetails = () => {
   const [payments, setPayments] = useState([]);
@@ -26,7 +26,40 @@ const Paymentsdetails = () => {
       }
     };
     fetchPayments();
-  }, []);
+  }, [currentUser.email]);
+
+  // Generate PDF for a specific payment
+  const handleDownloadPDF = (payment) => {
+    const doc = new jsPDF();
+
+    // Title
+    doc.setFontSize(20);
+    doc.text("Payment Invoice", 20, 20);
+
+    // Add content
+    doc.setFontSize(14);
+    doc.text(`User Email: ${currentUser.email}`, 20, 40);
+    doc.text(`Purchase Description: ${payment.listingname || "N/A"}`, 20, 50);
+    doc.text(`Product Type: ${payment.listingtype || "N/A"}`, 20, 60);
+    doc.text(`Order ID: ${payment.razorpay_order_id || "N/A"}`, 20, 70);
+    doc.text(
+      `Purchase Date: ${
+        payment.date ? new Date(payment.date).toLocaleDateString() : "N/A"
+      }`,
+      20,
+      80
+    );
+
+    // Safely handle amount
+    const amount = payment.amount !== undefined ? payment.amount : 0;
+    doc.text(`Total Amount: ₹${amount.toFixed(2)}`, 20, 90);
+
+    // Dummy content
+    doc.text("Thank you for your purchase! .", 20, 110);
+
+    // Open in a new tab
+    doc.output("dataurlnewwindow");
+  };
 
   if (loading) {
     return <div style={styles.loading}>Loading...</div>;
@@ -56,10 +89,17 @@ const Paymentsdetails = () => {
               <td style={styles.td}>{payment.listingtype}</td>
               <td style={styles.td}>{payment.razorpay_order_id}</td>
               <td style={styles.td}>
-                {new Date(payment.date).toLocaleDateString()}
+                {payment.date
+                  ? new Date(payment.date).toLocaleDateString()
+                  : "N/A"}
               </td>
               <td style={styles.td}>
-                <button style={styles.button}>Download</button>
+                <button
+                  style={styles.button}
+                  onClick={() => handleDownloadPDF(payment)}
+                >
+                  Download
+                </button>
               </td>
             </tr>
           ))}

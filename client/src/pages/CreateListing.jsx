@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import usePayment from "../hooks/usePayment";
 import currentuserdetail from "../hooks/usecurrentuserdetail";
+import LoadingSpinner from "../Loading/Loadingspinner";
 
 export default function CreateListing() {
   const { initiatePayment, loading: isPaymentLoading } = usePayment();
@@ -39,6 +40,7 @@ export default function CreateListing() {
       setUploading(false);
       return;
     }
+    toast.info("Please wait Images are Uploading ....");
 
     const uploadedUrls = [];
     for (const image of images) {
@@ -89,6 +91,10 @@ export default function CreateListing() {
   };
 
   const handleCreateListing = async () => {
+    if (uploading == true || formData.length == 0) {
+      toast.error("Please Upload Content");
+      return;
+    }
     try {
       const paymentSuccess = await initiatePayment({
         amount: 1000, // Amount in paise
@@ -324,6 +330,15 @@ export default function CreateListing() {
             {imageUploadError && imageUploadError}
           </p>
 
+          {uploading && (
+            <div className="flex flex-col items-center justify-center bg-gray-100 p-4 rounded-md shadow-lg">
+              <p className="text-sm text-gray-700 font-medium mb-3">
+                Please wait, images are uploading...
+              </p>
+              <div className="w-8 h-8 animate-spin rounded-full border-t-2 border-blue-500 border-gray-200"></div>
+            </div>
+          )}
+
           {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (
               <div
@@ -348,7 +363,12 @@ export default function CreateListing() {
           <button
             type="button"
             onClick={handleCreateListing}
-            disabled={isPaymentLoading}
+            disabled={isPaymentLoading && formData.length > 1}
+            className={`px-6 py-2 rounded-md font-semibold transition-all duration-300 ${
+              isPaymentLoading
+                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+            }`}
           >
             {isPaymentLoading ? "Processing..." : "Create Listing"}
           </button>
