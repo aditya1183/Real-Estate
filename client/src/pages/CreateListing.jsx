@@ -94,6 +94,8 @@ export default function CreateListing() {
         amount: 1000, // Amount in paise
         receiptId: "receipt_123",
         prefill: {
+          listingname: formData.name,
+          listingtype: formData.type,
           name: currentUser.firstname,
           email: currentUser.email,
           contact: currentUser.phone,

@@ -10,7 +10,12 @@ const paymentSchema = new mongoose.Schema({
   email: {
     type: String,
   },
-
+  listingname: {
+    type: String,
+  },
+  listingtype: {
+    type: String,
+  },
   razorpay_order_id: {
     type: String,
     required: true,

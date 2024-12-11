@@ -8,6 +8,7 @@ import CreateListing from "../pages/CreateListing.jsx";
 import UserallListings from "./UserallListings.jsx";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import Paymentsdetails from "./Paymentsdetails.jsx";
 const Profiledashboard = () => {
   const location = useLocation();
   const [tab, setTab] = useState("");
@@ -41,6 +42,7 @@ const Profiledashboard = () => {
       {tab == "verifypasswordtodeleteaccount" && (
         <VerifyPasswordtoDeleteAccount />
       )}
+      {tab == "paymentsdetails" && <Paymentsdetails />}
     </div>
   );
 };

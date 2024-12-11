@@ -65,7 +65,8 @@ export const ordervalidate = async (req, res) => {
       firstname: req.body.prefill.name,
       email: req.body.prefill.email,
       phone: req.body.prefill.phone,
-      //status: "successful",
+      listingname: req.body.prefill.listingname,
+      listingtype: req.body.prefill.listingtype,
     });
     await sendEmail({
       to: req.body.prefill.email,
@@ -90,5 +91,32 @@ export const ordervalidate = async (req, res) => {
       success: false,
       message: "Internal server error",
     });
+  }
+};
+
+export const getPaymentsByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate email
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    // Find all payments associated with the given email
+    const payments = await Payment.find({ email });
+
+    // If no payments found, send a message
+    if (!payments.length) {
+      return res
+        .status(404)
+        .json({ message: "No payments found for this email" });
+    }
+
+    // Send the payments as a response
+    res.status(200).json({ payments });
+  } catch (error) {
+    console.error("Error fetching payments:", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

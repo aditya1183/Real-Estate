@@ -149,6 +149,20 @@ const ProfileDashboardSidebar = () => {
               </Link>
             </li>
 
+            <li>
+              <Link
+                to="/dashboard?tab=paymentsdetails"
+                className={`flex items-center space-x-3 p-2 rounded-md ${
+                  tab === "paymentsdetails"
+                    ? "bg-purple-500 text-white"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+              >
+                <HiUser className="text-xl" />
+                <span>Payments Details</span>
+              </Link>
+            </li>
+
             {currentUser.isAdmin && (
               <>
                 <li>
