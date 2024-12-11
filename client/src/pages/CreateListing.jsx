@@ -1,23 +1,18 @@
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import currentuserdetail from "../hooks/usecurrentuserdetail";
 import { toast } from "react-toastify";
+import usePayment from "../hooks/usePayment";
+import currentuserdetail from "../hooks/usecurrentuserdetail";
 
 export default function CreateListing() {
+  const { initiatePayment, loading: isPaymentLoading } = usePayment();
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const hasUserDetails = currentuserdetail();
-  function aditya() {
-    if (!hasUserDetails) {
-      toast.error("Please add details before you create a listing");
-      return navigate("?tab=updateProfile");
-    }
-  }
+  const [imageUploadError, setImageUploadError] = useState(false);
 
-  //aditya();
   const [formData, setFormData] = useState({
     imageUrls: [],
     name: "",
@@ -32,125 +27,121 @@ export default function CreateListing() {
     parking: false,
     furnished: false,
   });
-  const [imageUploadError, setImageUploadError] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const [images, setImages] = useState([]); // Array to store selected images
+  const [images, setImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleUpload = async () => {
     setUploading(true);
     if (images.length === 0) {
       alert("Please select images to upload");
+      setUploading(false);
       return;
     }
 
     const uploadedUrls = [];
-
     for (const image of images) {
-      const formData = new FormData();
-      formData.append("file", image);
-      formData.append("upload_preset", "my_upload_preset"); // Replace with your upload preset
-      formData.append("cloud_name", "dyq7hjo63"); // Replace with your Cloudinary cloud name
+      const imageFormData = new FormData();
+      imageFormData.append("file", image);
+      imageFormData.append("upload_preset", "my_upload_preset");
+      imageFormData.append("cloud_name", "dyq7hjo63");
 
       try {
         const response = await axios.post(
           `https://api.cloudinary.com/v1_1/dyq7hjo63/image/upload`,
-          formData
+          imageFormData
         );
-        uploadedUrls.push(response.data.secure_url); // Add the uploaded image URL to the array
-      } catch (error) {
-        console.error("Error uploading image:", error);
+        uploadedUrls.push(response.data.secure_url);
+      } catch (uploadError) {
+        console.error("Error uploading image:", uploadError);
+        toast.error("Error uploading images.");
       }
     }
 
-    setFormData((prevFormData) => {
-      const existingUrls = prevFormData.imageUrls || []; // Get existing URLs or an empty array
-      return { ...prevFormData, imageUrls: [...existingUrls, ...uploadedUrls] };
-    });
-
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      imageUrls: [...prevFormData.imageUrls, ...uploadedUrls],
+    }));
     setUploading(false);
   };
 
   const handleRemoveImage = (index) => {
-    setFormData({
-      ...formData,
-      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
-    });
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      imageUrls: prevFormData.imageUrls.filter((_, i) => i !== index),
+    }));
   };
 
   const handleChange = (e) => {
-    if (e.target.id === "sale" || e.target.id === "rent") {
-      setFormData({
-        ...formData,
-        type: e.target.id,
-      });
-    }
+    const { id, value, type, checked } = e.target;
 
-    if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.checked,
-      });
-    }
-
-    if (
-      e.target.type === "number" ||
-      e.target.type === "text" ||
-      e.target.type === "textarea"
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.value,
-      });
+    if (id === "sale" || id === "rent") {
+      setFormData((prevFormData) => ({ ...prevFormData, type: id }));
+    } else if (["parking", "furnished", "offer"].includes(id)) {
+      setFormData((prevFormData) => ({ ...prevFormData, [id]: checked }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [id]: type === "number" ? +value : value,
+      }));
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("data send to backend");
-    console.log(formData);
-    console.log("data send sucessfully ...");
-
+  const handleCreateListing = async () => {
     try {
-      if (formData.imageUrls.length < 1)
-        return setError("You must upload at least one image");
-      if (+formData.regularPrice < +formData.discountPrice)
-        return setError("Discount price must be lower than regular price");
-      setLoading(true);
-      setError(false);
-      const res = await fetch("/api/listing/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const paymentSuccess = await initiatePayment({
+        amount: 1000, // Amount in paise
+        receiptId: "receipt_123",
+        prefill: {
+          name: "John Doe",
+          email: "john@example.com",
+          contact: "9876543210",
         },
-        body: JSON.stringify({
-          ...formData,
-          userRef: currentUser._id,
-        }),
       });
-      const data = await res.json();
-      setLoading(false);
-      if (data.success === false) {
-        setError(data.message);
+
+      if (paymentSuccess) {
+        console.log("prachi");
+        const response = await fetch("/api/listing/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, userRef: currentUser._id }),
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            "Failed to create listing. Server returned an error."
+          );
+        }
+
+        const data = await response.json();
+        console.log("aditya prachi", data);
+        console.log(data.status);
+        if (data.success === true) {
+          toast.success("Listing created successfully!");
+          navigate(`/listing/${data.data._id}`);
+        } else {
+          throw new Error(data.message || "Failed to create listing.");
+        }
+      } else {
+        throw new Error("Payment was not completed. Listing creation aborted.");
       }
-      navigate(`/listing/${data._id}`);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
+    } catch (err) {
+      console.error("Error:", err.message);
+      toast.error(err.message || "An error occurred. Please try again.");
     }
   };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
         Create a Listing
       </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+
+      <form
+        onSubmit={handleCreateListing}
+        className="flex flex-col sm:flex-row gap-4"
+      >
         <div className="flex flex-col gap-4 flex-1">
           <input
             type="text"
@@ -352,12 +343,15 @@ export default function CreateListing() {
                 </button>
               </div>
             ))}
+
           <button
-            disabled={loading}
-            className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+            type="button"
+            onClick={handleCreateListing}
+            disabled={isPaymentLoading}
           >
-            {loading ? "Creating..." : "Create listing"}
+            {isPaymentLoading ? "Processing..." : "Create Listing"}
           </button>
+
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>
       </form>

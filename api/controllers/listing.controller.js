@@ -7,7 +7,12 @@ import User from "../models/user.model.js";
 export const createListing = async (req, res, next) => {
   try {
     const listing = await Listing.create(req.body);
-    return res.status(201).json(listing);
+
+    return res.status(200).json({
+      success: true,
+      message: "Listing created successfully!",
+      data: listing, // Include the created listing details
+    });
   } catch (error) {
     next(error);
   }
