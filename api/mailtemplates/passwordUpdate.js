@@ -86,8 +86,8 @@ export const passwordUpdated = (email, name) => {
               </div>
               <div class="footer">
                   If you have any questions or need further assistance, feel free to contact us at 
-                  <a href="mailto:info@adityasharma.com">info@studynotion.com</a>.<br>
-                  &copy; ${new Date().getFullYear()} StudyNotion. All Rights Reserved.
+                  <a href="mailto:info@adityasharma.com">info@realestate.com</a>.<br>
+                  &copy; ${new Date().getFullYear()} realestate. All Rights Reserved.
               </div>
           </div>
       </body>

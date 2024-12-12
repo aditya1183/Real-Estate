@@ -8,6 +8,7 @@ import {
 } from "../redux/user/userSlice";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ProfileDashboardupdateprofile = () => {
   const fileRef = useRef(null);
@@ -16,7 +17,7 @@ const ProfileDashboardupdateprofile = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false); // For loading spinner
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  console.log("aditya", currentUser);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: currentUser?.firstname || "",
@@ -204,10 +205,48 @@ const ProfileDashboardupdateprofile = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log(currentUser._id);
     e.preventDefault();
+    if (
+      formData.firstName.trim().length === 0 ||
+      formData.lastName.trim().length === 0 ||
+      formData.alternativeEmail.trim().length === 0 ||
+      formData.currentAddress.trim().length === 0 ||
+      formData.permanentAddress.trim().length === 0 ||
+      !formData.age || // Check if age is empty, null, or 0
+      isNaN(formData.age) || // Check if age is not a number
+      Number(formData.age) <= 0 || // Check if age is not positive
+      Number(formData.age) > 100 // Check if age exceeds 100
+    ) {
+      console.log("aditya prachi");
+      return toast.error("Please enter all fields correctly.");
+    }
+    if (
+      !formData.age ||
+      isNaN(formData.age) ||
+      Number(formData.age) <= 18 ||
+      Number(formData.age) > 100
+    ) {
+      return toast.error("Please enter a valid age between 18 and 100.");
+    }
+    if (/[^A-Za-z\s]/.test(formData.firstName)) {
+      return toast.error(
+        "First name should not contain numbers or special characters."
+      );
+    }
+
+    if (/[^A-Za-z\s]/.test(formData.lastName)) {
+      return toast.error(
+        "Last name should not contain numbers or special characters."
+      );
+    }
+
     setIsLoading(true);
     try {
+      for (const key in formData) {
+        if (typeof formData[key] === "string") {
+          formData[key] = formData[key].trim();
+        }
+      }
       dispatch(updateUserStart());
       const res = await axios.post(
         `/api/user/update/${currentUser._id}`,
@@ -227,6 +266,7 @@ const ProfileDashboardupdateprofile = () => {
         return;
       }
       if (data.message === "User  updated successfully") {
+        navigate("?tab=profile");
         toast.info("user profile updated sucessfully ..");
         console.log(data.data);
         dispatch(updateUserSuccess(data.data));

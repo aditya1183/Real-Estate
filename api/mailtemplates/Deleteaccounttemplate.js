@@ -1,14 +1,14 @@
-export const forgotPasswordOtp = (email, name, otp) => {
-  return `<!DOCTYPE html>
+export const accountDeletionConfirmation = (email, name) => {
+    return `<!DOCTYPE html>
         <html>
         
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Forgot Password OTP</title>
+            <title>Account Deletion Confirmation</title>
             <style>
                 body {
-                    background-color: #f4f4f9;
+                    background-color: #f9f9f9;
                     font-family: 'Arial', sans-serif;
                     margin: 0;
                     padding: 0;
@@ -26,7 +26,7 @@ export const forgotPasswordOtp = (email, name, otp) => {
                 }
         
                 .header {
-                    background-color: #007BFF;
+                    background-color: #ff4b5c;
                     color: #ffffff;
                     padding: 20px;
                     text-align: center;
@@ -38,7 +38,7 @@ export const forgotPasswordOtp = (email, name, otp) => {
                     font-size: 18px;
                     font-weight: bold;
                     margin: 20px 0;
-                    color: #007BFF;
+                    color: #ff4b5c;
                     text-align: center;
                 }
         
@@ -55,15 +55,6 @@ export const forgotPasswordOtp = (email, name, otp) => {
                     color: #333;
                 }
         
-                .otp {
-                    display: block;
-                    font-size: 32px;
-                    font-weight: bold;
-                    color: #007BFF;
-                    text-align: center;
-                    margin: 20px 0;
-                }
-        
                 .footer {
                     text-align: center;
                     font-size: 14px;
@@ -74,7 +65,7 @@ export const forgotPasswordOtp = (email, name, otp) => {
                 }
         
                 a {
-                    color: #007BFF;
+                    color: #ff4b5c;
                     text-decoration: none;
                 }
         
@@ -86,22 +77,21 @@ export const forgotPasswordOtp = (email, name, otp) => {
         
         <body>
             <div class="container">
-                <div class="header">Forgot Password Request</div>
-                <div class="message">Here is your OTP</div>
+                <div class="header">Real Estate</div>
+                <div class="message">Account Deletion Confirmation</div>
                 <div class="body">
                     <p>Hi <span class="highlight">${name}</span>,</p>
-                    <p>You requested to reset your password for the account associated with <span class="highlight">${email}</span>.</p>
-                    <p>Please use the OTP below to proceed with resetting your password:</p>
-                    <div class="otp">${otp}</div>
-                    <p>This OTP is valid for the next 10 minutes. If you did not request a password reset, please ignore this email.</p>
+                    <p>We confirm that your account associated with the email <span class="highlight">${email}</span> has been successfully deleted.</p>
+                    <p>If you did not request this action or if you believe this was done in error, please contact us immediately to resolve the issue.</p>
                 </div>
                 <div class="footer">
-                    Need help? Contact us at 
-                    <a href="mailto:info@studynotion.com">info@realEstate.com</a>.<br>
+                    If you have any questions, feel free to reach out to us at 
+                    <a href="mailto:info@realestate.com">info@realestate.com</a>.<br>
                     &copy; ${new Date().getFullYear()} Real Estate. All Rights Reserved.
                 </div>
             </div>
         </body>
         
         </html>`;
-};
+  };
+  

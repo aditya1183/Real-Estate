@@ -1,5 +1,5 @@
 export const signuptemplate = (email, name) => {
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
     <html>
     <head>
         <meta charset="UTF-8">
@@ -26,7 +26,7 @@ export const signuptemplate = (email, name) => {
                         <tr>
                             <td style="padding: 20px; text-align: center; font-size: 14px; color: #555;">
                                 <p>If you have any questions, reach out to us anytime at 
-                                <a href="mailto:info@studynotion.com" style="color: #007BFF; text-decoration: none;">info@studynotion.com</a>.</p>
+                                <a href="mailto:info@realestate.com" style="color: #007BFF; text-decoration: none;">info@realestate.com</a>.</p>
                                 <p>We’re here to help!</p>
                             </td>
                         </tr>
@@ -41,5 +41,4 @@ export const signuptemplate = (email, name) => {
         </table>
     </body>
     </html>`;
-  };
-  
+};

@@ -27,25 +27,6 @@ router.post("/forgootenpassword", forgootenpassword);
 router.post("/verifyotptoresetpassword", verifyOtptoresetpassword);
 router.post("/resetpassword", resetpassword);
 
-// router.post("/checkaccestoken", async (req, res) => {
-//   const token = req.cookies.access_token;
-
-//   if (!token) {
-//     return res.status(404).json({ message: "Token not found! " });
-//   }
-
-//   jwt.verify(token, "adityaaditya", (err, user) => {
-//     if (err) {
-//       return res
-//         .status(404)
-//         .json({ message: "Token is expired or invalid! aditya" });
-//     }
-
-//     // Token is valid
-//     res.status(200).json({ message: "Token is valid!", user });
-//   });
-// });
-
 router.post("/checkaccestoken", async (req, res) => {
   const accessToken = req.cookies.access_token;
   const refreshToken = req.cookies.refresh_token;
@@ -58,7 +39,6 @@ router.post("/checkaccestoken", async (req, res) => {
   // Verify access token
   jwt.verify(accessToken, "adityaaditya", (err, user) => {
     if (err) {
-      // If access token is expired or invalid, check refresh token
       if (
         err.name === "TokenExpiredError" ||
         err.name === "JsonWebTokenError"
@@ -79,7 +59,7 @@ router.post("/checkaccestoken", async (req, res) => {
           const newAccessToken = jwt.sign(
             { id: decoded.id, username: decoded.username },
             "adityaaditya",
-            { expiresIn: "5m" } // New access token valid for 30 minutes
+            { expiresIn: "60m" } // New access token valid for 30 minutes
           );
 
           res.cookie("access_token", newAccessToken, {

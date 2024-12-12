@@ -165,12 +165,29 @@ export default function SignUp() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value,
+      [e.target.id]: e.target.value.trim(),
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      formData.password.trim().length === 0 ||
+      formData.email.trim().length == 0 ||
+      formData.username.trim().length == 0
+    ) {
+      return toast.error("Please Enter Your Details Correctely ...");
+    }
+
+    if (
+      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+        formData.password
+      )
+    ) {
+      return toast.error(
+        "Password must be at least 8 characters long and include at least one letter, one number, and one special character."
+      );
+    }
     setError(null);
     try {
       setLoading(true);

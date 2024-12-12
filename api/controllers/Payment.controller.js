@@ -70,7 +70,7 @@ export const ordervalidate = async (req, res) => {
     });
     await sendEmail({
       to: req.body.prefill.email,
-      subject: "Your OTP for Account Verification",
+      subject: "Payment details",
       html: paymentSuccessTemplate(
         req.body.prefill.name,
         req.body.prefill.email,

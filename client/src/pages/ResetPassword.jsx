@@ -13,6 +13,7 @@ function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, seterror] = useState("");
+  const [showpassword, setshowpassword] = useState(false);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -33,12 +34,78 @@ function ResetPassword() {
     }
   }, [email]);
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   seterror(""); // Clear previous error
+  //   newPassword = newPassword.trim();
+  //   confirmPassword = confirmPassword.trim();
+
+  //   const passwordRegex =
+  //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  //   if (!passwordRegex.test(newPassword)) {
+  //     toast.error(
+  //       "Password must be at least 8 characters long, contain at least one letter, one number, and one special character."
+  //     );
+  //     return;
+  //   }
+
+  //   if (newPassword !== confirmPassword) {
+  //     seterror("Passwords do not match.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setloading(true);
+  //     const res = await axios.post(
+  //       "/api/auth/resetpassword",
+  //       { email, newPassword },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     if (res.data.message === "Password reset successfully.") {
+  //       localStorage.removeItem("resetEmail");
+  //     }
+  //     toast.success(
+  //       "Password reset successfully! Redirecting to login page..."
+  //     );
+  //     setTimeout(() => {
+  //       navigate("/sign-in"); // Redirect after 2 seconds
+  //     }, 2000);
+  //   } catch (error) {
+  //     console.error("Error resetting password:", error);
+  //     seterror("Failed to reset password. Please try again.");
+  //   } finally {
+  //     setloading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     seterror(""); // Clear previous error
 
-    if (newPassword !== confirmPassword) {
-      seterror("Passwords do not match.");
+    // Trim inputs to remove extra spaces
+    const trimmedNewPassword = newPassword.trim();
+    const trimmedConfirmPassword = confirmPassword.trim();
+
+    // Password validation regex
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    // Check if password meets criteria
+    if (!passwordRegex.test(trimmedNewPassword)) {
+      toast.error(
+        "Password must be at least 8 characters long, contain at least one letter, one number, and one special character."
+      );
+      return;
+    }
+
+    // Check if passwords match
+    if (trimmedNewPassword !== trimmedConfirmPassword) {
+      toast.error("Passwords do not match.");
       return;
     }
 
@@ -46,22 +113,25 @@ function ResetPassword() {
       setloading(true);
       const res = await axios.post(
         "/api/auth/resetpassword",
-        { email, newPassword },
+        { email, newPassword: trimmedNewPassword },
         {
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
+
       if (res.data.message === "Password reset successfully.") {
         localStorage.removeItem("resetEmail");
+        toast.success(
+          "Password reset successfully! Redirecting to login page..."
+        );
+        setTimeout(() => {
+          navigate("/sign-in"); // Redirect after 2 seconds
+        }, 2000);
+      } else {
+        toast.error("Failed to reset password. Please try again.");
       }
-      toast.success(
-        "Password reset successfully! Redirecting to login page..."
-      );
-      setTimeout(() => {
-        navigate("/sign-in"); // Redirect after 2 seconds
-      }, 2000);
     } catch (error) {
       console.error("Error resetting password:", error);
       seterror("Failed to reset password. Please try again.");
@@ -100,19 +170,31 @@ function ResetPassword() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <input
-            type="password"
+            type={showpassword ? "text" : "password"}
             placeholder="Enter New Password"
             className="border p-4 rounded-lg"
             value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            onChange={(e) => setNewPassword(e.target.value.trim())}
           />
           <input
-            type="password"
+            type={showpassword ? "text" : "password"}
+            s
             placeholder="Re-enter New Password"
             className="border p-4 rounded-lg"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value.trim())}
           />
+          <div>
+            <span>show </span>{" "}
+            <input
+              type="checkbox"
+              checked={showpassword}
+              onChange={() => {
+                setshowpassword(!showpassword);
+              }}
+            />
+          </div>
+
           {newPassword !== confirmPassword &&
             newPassword.length > 1 &&
             confirmPassword.length > 1 && <p>Password Not Match</p>}
@@ -128,7 +210,6 @@ function ResetPassword() {
           >
             Reset Password
           </button>
-
           {error && (
             <div className="mt-5 p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 flex items-center gap-3">
               <svg

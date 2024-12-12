@@ -1,5 +1,5 @@
 export const adminOtpTemplate = (adminName, otp) => {
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
       <html lang="en">
       <head>
         <meta charset="UTF-8">
@@ -79,7 +79,7 @@ export const adminOtpTemplate = (adminName, otp) => {
               <div class="otp">${otp}</div>
               <p>This OTP is valid for the next <strong>10 minutes</strong>. If you did not request this, please contact support immediately.</p>
               <p>For further assistance, feel free to reach out to us at 
-              <a href="mailto:admin-support@studynotion.com">admin-support@studynotion.com</a>.</p>
+              <a href="mailto:admin-support@realeatate.com">admin-support@realestate.com</a>.</p>
             </div>
             <div class="footer">
               &copy; 2024 Real Estate Admin Panel. All rights reserved.
@@ -88,5 +88,4 @@ export const adminOtpTemplate = (adminName, otp) => {
         </div>
       </body>
       </html>`;
-  };
-  
+};

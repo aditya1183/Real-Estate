@@ -159,10 +159,11 @@ const VerifyPasswordtoDeleteAccount = () => {
     try {
       dispatch(deleteUserStart());
       setloading(true);
+      const ppassword = password.trim();
 
       const res = await axios.post(
         `/api/user/delete/${currentUser._id}`,
-        { password },
+        { ppassword },
         {
           headers: {
             "Content-Type": "application/json",

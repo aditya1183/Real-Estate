@@ -30,12 +30,18 @@ export default function SignIn() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value,
+      [e.target.id]: e.target.value.trim(),
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      formData.password.trim().length === 0 ||
+      formData.email.trim().length === 0
+    ) {
+      return toast.error("Please Enter Your Crenditils Correctely");
+    }
     try {
       dispatch(signInStart());
       const res = await axios.post("/api/auth/signin", formData, {

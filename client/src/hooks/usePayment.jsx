@@ -1,4 +1,5 @@
 import { useState } from "react";
+import image from "../pages/Images/imge.jpg";
 
 const usePayment = () => {
   const [loading, setLoading] = useState(false);
@@ -40,15 +41,15 @@ const usePayment = () => {
           key: "rzp_test_1nbToCIUafcIWo", // Replace with your Razorpay Key ID
           amount: order.amount, // Amount in paise
           currency: order.currency,
-          name: "Your Business Name",
+          name: "Real Estate",
           description: "Payment for Listing",
-          image: "https://example.com/your_logo", // Optional logo URL
+          image: image, // Optional logo URL
           order_id: order.id,
           handler: async function (paymentResponse) {
             try {
               const validateRes = await fetch("/api/payment/validateorder", {
                 method: "POST",
-                body: JSON.stringify({paymentResponse, prefill}),
+                body: JSON.stringify({ paymentResponse, prefill }),
                 headers: { "Content-Type": "application/json" },
               });
 

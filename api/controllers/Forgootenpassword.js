@@ -31,7 +31,7 @@ export const forgootenpassword = async (req, res, next) => {
     await sendEmail({
       to: email,
       subject: "Password Reset OTP",
-      html: forgotPasswordOtp(email, finduser.name, otp),
+      html: forgotPasswordOtp(email, finduser.username, otp),
     });
 
     res.status(200).json({ message: "OTP sent to email" });

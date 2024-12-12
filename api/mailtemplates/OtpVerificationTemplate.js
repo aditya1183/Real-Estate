@@ -80,7 +80,7 @@ export const otpVerificationTemplate = (name, otp) => {
             <div class="otp">${otp}</div>
             <p>This OTP is valid for the next <strong>10 minutes</strong>. If you didn’t request this, you can safely ignore this email.</p>
             <p>If you have any questions, reach out to us anytime at 
-            <a href="mailto:info@studynotion.com">info@studynotion.com</a>.</p>
+            <a href="mailto:info@realestate.com">info@realestate.com</a>.</p>
           </div>
           <div class="footer">
             &copy; 2024 Real Estate Aditya Vashsitha. All rights reserved.

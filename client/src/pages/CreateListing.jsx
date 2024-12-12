@@ -360,7 +360,7 @@ export default function CreateListing() {
               </div>
             ))}
 
-          <button
+          {/* <button
             type="button"
             onClick={handleCreateListing}
             disabled={isPaymentLoading && formData.length > 1}
@@ -368,6 +368,24 @@ export default function CreateListing() {
               isPaymentLoading
                 ? "bg-gray-400 text-gray-700 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+            }`}
+          >
+            {isPaymentLoading ? "Processing..." : "Create Listing"}
+          </button> */}
+          <button
+            type="button"
+            onClick={handleCreateListing}
+            disabled={
+              isPaymentLoading ||
+              uploading ||
+              formData.imageUrls.length === 0 ||
+              !formData.name.trim() ||
+              !formData.description.trim().length
+            }
+            className={`px-6 py-3 rounded-lg bg-blue-500 text-white uppercase ${
+              isPaymentLoading || uploading
+                ? "opacity-70 cursor-not-allowed"
+                : "hover:bg-blue-700"
             }`}
           >
             {isPaymentLoading ? "Processing..." : "Create Listing"}

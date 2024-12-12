@@ -7,12 +7,17 @@ import {
   HiAnnotation,
   HiChartPie,
 } from "react-icons/hi";
-import { IoIosCreate } from "react-icons/io";
+
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutUserSuccess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaMoneyCheckAlt } from "react-icons/fa";
+import { FaDatabase } from "react-icons/fa6";
+import { IoIosCreate } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
 
 const ProfileDashboardSidebar = () => {
   const location = useLocation();
@@ -92,7 +97,7 @@ const ProfileDashboardSidebar = () => {
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
-                <HiUser className="text-xl" />
+                <FaEdit className="text-xl" />
                 <span>Profile Update</span>
               </Link>
             </li>
@@ -118,7 +123,7 @@ const ProfileDashboardSidebar = () => {
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
-                <HiUser className="text-xl" />
+                <MdDelete className="text-xl" />
                 <span>Delete Account</span>
               </Link>
             </li>
@@ -131,7 +136,7 @@ const ProfileDashboardSidebar = () => {
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
-                <HiUser className="text-xl" />
+                <IoIosCreate className="text-xl" />
                 <span>Create Listing</span>
               </Link>
             </li>
@@ -144,7 +149,7 @@ const ProfileDashboardSidebar = () => {
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
-                <HiUser className="text-xl" />
+                <FaDatabase className="text-xl" />
                 <span>All Listings</span>
               </Link>
             </li>
@@ -158,12 +163,12 @@ const ProfileDashboardSidebar = () => {
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
-                <HiUser className="text-xl" />
+                <FaMoneyCheckAlt className="text-xl" />
                 <span>Payments Details</span>
               </Link>
             </li>
 
-            {currentUser.isAdmin && (
+            {/* {currentUser.isAdmin && (
               <>
                 <li>
                   <Link
@@ -214,7 +219,7 @@ const ProfileDashboardSidebar = () => {
                   </Link>
                 </li>
               </>
-            )}
+            )} */}
           </ul>
           <div className="p-4">
             <button
@@ -227,13 +232,13 @@ const ProfileDashboardSidebar = () => {
           </div>
         </div>
         <div className="p-4">
-          <button
+          {/* <button
             onClick={handleSignout}
             className="flex items-center space-x-3 w-full p-2 rounded-md bg-red-500 text-white hover:bg-red-600"
           >
             <HiArrowSmRight className="text-xl" />
             <span>Sign Out</span>
-          </button>
+          </button> */}
         </div>
       </div>
 
