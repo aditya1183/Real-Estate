@@ -217,7 +217,7 @@ const ProfileDashboardupdateprofile = () => {
       Number(formData.age) <= 0 || // Check if age is not positive
       Number(formData.age) > 100 // Check if age exceeds 100
     ) {
-      console.log("aditya prachi");
+      console.log(formData);
       return toast.error("Please enter all fields correctly.");
     }
     if (
