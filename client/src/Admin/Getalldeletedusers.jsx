@@ -61,6 +61,12 @@ function Getalldeletedusers() {
                     {new Date(user.updatedAt).toLocaleString()}
                   </p>
                 </div>
+                <button styles={{
+                  "backgroundColor  ": "back",
+                  padding:"1rem 2rem"
+                }}>
+                  Restore User
+                </button>
               </Link>
             ))}
           </div>
