@@ -8,7 +8,7 @@ import {
   signup,
   verifyOtp,
 } from "../controllers/auth.controller.js";
-import { verifyToken } from "../utils/verifyUser.js";
+// import { verifyToken } from "../utils/verifyUser.js";
 import {
   forgootenpassword,
   verifyOtptoresetpassword,
